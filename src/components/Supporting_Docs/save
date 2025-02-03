@@ -1,0 +1,1329 @@
+
+// import React, { useState, useEffect , useContext} from 'react';
+// import VerifyStatus from './VerifyStatus';
+// import Overlay from './Overlay';
+// import PdfOverlay from './PdfOverlay'; 
+// import axios from 'axios'; 
+// import { UserContext } from '../UserContext/UserContext';
+// import Verification_Docs from './Verification_Docs';
+// import Document_Verification from './Document_Verification';
+// import Document_Review from './Document_Review';
+// const VerifyResults = ({ apiResponseData }) => 
+    
+//     {
+
+
+//         const { token } = useContext(UserContext);
+//         console.log("token", token);
+
+
+//     const getNullValueFiles = (documents) => {
+//         return Object.entries(documents)
+//             .filter(([_, value]) => value === null)
+//             .map(([key, _]) => key);
+//     };
+
+//     useEffect(() => {
+//         if (apiResponseData) {
+//             const nullFiles = getNullValueFiles(apiResponseData);
+//             setNullFiles(nullFiles);
+//         }
+//     }, [apiResponseData]);
+
+//     const filterDataWithValues = (data) => {
+//         return Object.entries(data)
+//             .filter(([_, value]) => value !== null)
+//             .reduce((acc, [key, value]) => {
+//                 acc[key] = value;
+//                 return acc;
+//             }, {});
+//     };
+
+//     const [documents, setDocuments] = useState([]);
+//     const [showFiles, setShowFiles] = useState(false);
+//     const [selectedButton, setSelectedButton] = useState(null);
+//     const [availableFiles, setAvailableFiles] = useState([]);
+//     const [nullFiles, setNullFiles] = useState([]);
+//     const [addedFiles, setAddedFiles] = useState({});
+//     const [pdfUrl, setPdfUrl] = useState(null);
+//     const [pdfUrl1 , setPdfUrl1] = useState(null);
+//     const [buttonStates, setButtonStates] = useState({});
+//     const [currentRowIndex, setCurrentRowIndex] = useState(null);
+//     const [newButtonFlag, setNewButtonFlag] = useState(false);
+//     const [selectedButtonIndex, setSelectedButtonIndex] = useState(null);
+//     const [verificationResult, setVerificationResult] = useState(null);
+//     const [isVerificationPending, setIsVerificationPending] = useState(false);
+//     const [DocumentVerificationReuslt , setDocumentsVerificationReuslt] = useState([])
+//     const [payload , setPayload] = useState()
+//     const [counter , SetCounter] = useState(1)
+//     const fetchDocuments = async () => {
+//         try {
+//             const response = await axios.post('https://192.168.18.251:8010/GetRequiredDocumentsJson_Filed_46A/');
+//             if (response.status === 200) {
+//                 const data = response.data;
+//                 if (data.points && Array.isArray(data.points)) {
+//                     setDocuments(data.points);
+//                 } else {
+//                     console.warn("No points found in response");
+//                 }
+//             } else {
+//                 console.error("API returned an unexpected status:", response.status);
+//             }
+
+//             console.log("Response: " + JSON.stringify(response));
+//         } catch (error) {
+//             console.error('Error fetching documents:', error);
+//         }
+//     };
+
+//     useEffect(() => {
+//         fetchDocuments();
+//     }, []);
+
+//     useEffect(() => {
+//         if (apiResponseData && apiResponseData.points) {
+//             setDocuments(apiResponseData.points);
+//         }
+//     }, [apiResponseData]);
+
+//     const handleAddFilesClick = (rowIndex) => {
+//         setCurrentRowIndex(rowIndex);
+//         setShowFiles(true);
+//     };
+
+
+
+    
+//     const handleFileSelect = (fileName) => {
+//         console.log("File selected:", fileName);
+//         if (currentRowIndex !== null) {
+//             const newAddedFiles = { ...addedFiles };
+//             const documentKey = documents[currentRowIndex]?.Number;
+//             console.log("row", documentKey);
+    
+//             if (!newAddedFiles[documentKey]) {
+//                 newAddedFiles[documentKey] = [];
+//             }
+    
+//             // Count both existing filteredEntries and already added files for the row
+//             const existingButtonsCount = filteredEntries.filter(([_, value]) => Number(value) === currentRowIndex + 1).length;
+//             const addedButtonsCount = newAddedFiles[documentKey].length;
+    
+//             // The new button index should be the sum of both counts
+//             const newButtonIndex = existingButtonsCount + addedButtonsCount;
+    
+//             // Add the new file to the list for the current row
+//             if (fileName !== null) {
+//                 newAddedFiles[documentKey].push(fileName); // Add new file at the end
+//                 handleFileAddition(fileName);
+//                 setNewButtonFlag(true); // Set flag for new button
+//             } else {
+//                 newAddedFiles[documentKey].push(null); // Add new file at the end
+//                 handleFileAddition(null);
+//                 setNewButtonFlag(true); // Set flag for new button
+//             }
+    
+//             setAddedFiles(newAddedFiles);
+//             setShowFiles(false);
+//             setCurrentRowIndex(null);
+//         }
+//     };
+    
+    
+    
+//     const handleFileAddition = (newFileName) => {
+//         setAvailableFiles(prevFiles => {
+//             if (newFileName === null || !prevFiles.includes(newFileName)) {
+//                 return [newFileName, ...prevFiles]; // Add new file at the beginning
+//             }
+//             return prevFiles;
+//         });
+//     };
+
+//     const handleButtonClick = async (fileName, rowIndex, buttonIndex) => {
+//         try {
+//             const response = await axios.post('https://192.168.18.251:8010/get_requiredFile/', {
+//                 filename: fileName
+//             }, {
+//                 responseType: 'blob'
+//             });
+
+//             const fileUrl = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+            
+//             setPdfUrl(fileUrl);
+//             setSelectedButton({ rowIndex, buttonIndex });
+//         } catch (error) {
+//             console.error('Error fetching or downloading the PDF file:', error);
+//         }
+//     };
+//     const handleButtonClick1 = async (fileName) => {
+//       try {
+//           const response = await axios.post('https://192.168.18.251:8010/get_requiredFile/', {
+//               filename: fileName
+//           }, {
+//               responseType: 'blob'
+//           });
+
+//           const fileUrl = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+          
+//           setPdfUrl1(fileUrl);
+         
+//       } catch (error) {
+//           console.error('Error fetching or downloading the PDF file:', error);
+//       }
+//   };
+//     const [showVerificationDocs, setShowVerificationDocs] = useState(false);
+ 
+//     const handleProceedClick = async () => {
+//       const payload1 = {};
+  
+//       documents.forEach((doc) => {
+//           const documentNumber = String(doc.Number); // Convert document number to a string
+  
+//           // Get added files for the current document row
+//           const addedFilesForRow = addedFiles[documentNumber] || [];
+          
+//           // Get filtered files for the current document row
+//           const filteredFilesForRow = filteredEntries
+//               .filter(([filteredKey, filteredValue]) => Number(filteredValue) === doc.Number)
+//               .map(([filteredKey]) => filteredKey);
+          
+//           // Combine added and filtered files
+//           const allFilesForRow = [...addedFilesForRow, ...filteredFilesForRow];
+          
+//           // If there are any files for the row, construct the payload
+//           if (allFilesForRow.length > 0) {
+//               allFilesForRow.forEach((fileName) => {
+//                   // Set the payload with the document name (including extension) and document number as a string
+//                   payload1[fileName] = documentNumber;
+//               });
+//           }
+//       });
+  
+//       console.log("payload", payload1);
+      
+//       // To ensure you're using the correct payload in the API call, use payload1 directly
+//       try {
+//           const response = await axios.post('https://192.168.18.251:8010/store_documents/', payload1, {
+//               headers: {
+//                   'Authorization': `Bearer ${token}`,
+//                   'Content-Type': 'application/json'
+//               }
+//           });
+          
+//           if (response.status === 200) {
+//               console.log('Documents successfully stored:', response.data.data);
+//               setVerificationResult(true);
+//               setIsVerificationPending(true);
+//               setPayload(response.data.data); // Store the response data
+//               console.log('Payload successfully stored:', response.data); 
+//               startVerificationPolling()// Log the stored response data
+//           } else {
+//               console.error('Error storing documents:', response.status);
+//           }
+//       } catch (error) {
+//           console.error('Error during the POST request:', error);
+//       }
+//   };
+  
+  
+//   const pollVerificationStatus = async () => {
+//     let hasCheckedOnce = false; // Flag to ensure second API is only called once
+
+//     // Polling function to call the first API every 10 seconds
+//     while (!hasCheckedOnce) {
+//         try {
+//             // Call the first verification API
+//             const response = await axios.post('https://192.168.18.251:8010/DocumentsDetailedVerification/', {
+//                 timeout: 300000, // Set timeout to 5 minutes
+//             });
+
+//             if (response.data.message === 'OK') {
+//                 console.log('Verification completed successfully');
+//                 hasCheckedOnce = true; // Mark that the second API should be called only once
+
+//                 // Call the second API once after first API returns "OK"
+//                 await fetchDetailedVerificationResult(); 
+//             } else {
+//                 console.log('Verification still pending or other status:', response.data.message);
+//             }
+//         } catch (error) {
+//             console.error('Error fetching verification status:', error);
+//         }
+
+//         // Wait 10 seconds before the next poll if result is not 'OK'
+//         if (!hasCheckedOnce) {
+//             await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait 10 seconds
+//         }
+//     }
+// };
+
+// const fetchDetailedVerificationResult = async () => {
+//     try {
+//         // Call the second API for detailed verification result after first API returns "OK"
+//         const response = await axios.post('https://192.168.18.251:8010/DetailedVerificationResult/', {
+//             timeout: 300000, // Set timeout to 5 minutes
+//         });
+//         console.log('Detailed verification result:', response.data);
+//         setDocumentsVerificationReuslt(response.data);
+//         setIsVerificationPending(false); // Stop showing verification pending
+//         setShowVerificationDocs(true); // Show the detailed verification results
+//     } catch (error) {
+//         console.error('Error fetching detailed verification result:', error);
+//     }
+// };
+
+// // Call this function whenever you want to start polling, e.g., on a button click
+// const startVerificationPolling = () => {
+
+//         pollVerificationStatus(); // Start the async polling function
+    
+// };
+
+
+
+
+
+
+//     const [verificationStates, setVerificationStates] = useState({});
+
+//     const handleCheckboxChange = (docNumber, pointKey) => {
+//       setVerificationStates(prevStates => ({
+//           ...prevStates,
+//           [docNumber]: {
+//               ...prevStates[docNumber],
+//               [pointKey]: !prevStates[docNumber]?.[pointKey], // Toggle for specific pointKey within the document
+//           }
+//       }));
+//   };
+  
+
+//     useEffect(() => {
+//         console.log("Button states updated:", buttonStates);
+//     }, [buttonStates]);
+    
+
+//     const handleAccept = () => {
+   
+    
+//         setPdfUrl(null);
+//     };
+    
+
+//     const handleReject = () => {
+      
+//         setPdfUrl(null);
+//     };
+    
+//     const handleRemoveFile = (fileName, docNumber) => {
+//         // Create a copy of the addedFiles state
+//         const newAddedFiles = { ...addedFiles };
+    
+//         // Remove the file from the current row's document
+//         const currentFiles = newAddedFiles[docNumber] || [];
+//         const updatedFiles = currentFiles.filter(file => file !== fileName);
+        
+//         // Update the addedFiles state with the removed file
+//         newAddedFiles[docNumber] = updatedFiles;
+    
+//         // Add the file back to the current row's document
+//         setAddedFiles(newAddedFiles);
+//         setAvailableFiles(prevFiles => [...prevFiles, fileName]); // Assuming you want to add it back to available files
+//     };
+
+//     const filteredData = filterDataWithValues(apiResponseData || {});
+//     const filteredEntries = Object.entries(filteredData);
+
+//     // Adjust button indexes when a new button is added
+//     useEffect(() => {
+//         if (newButtonFlag) {
+//             setNewButtonFlag(false); // Reset the flag
+//         }
+//     }, [newButtonFlag]);
+
+//     return (
+//         verificationResult ? (
+//           showVerificationDocs ? (
+           
+//             <div className="flex flex-col absolute w-[92%] h-[100%]">
+//             <div className='flex w-[100%] h-[15%] border-b-[1px] border-[#959191] py-[60px]'>
+//               <VerifyStatus />
+//             </div>
+//             <div className="flex flex-col w-[100%] h-[15%] py-[60px] justify-center items-center">
+//               <div className='w-[300px] h-9 bg-[#2B333E] text-center font-[500] text-[20px]  text-white items-center'>
+//                 Documents Verification
+ 
+               
+//               </div>
+             
+//             </div>
+//             <div className='flex flex-col justify-end items-end w-full   '>
+//                  <span>
+//                  <Document_Review/>
+//                  </span>
+//                 </div>
+//                 <Verification_Docs />
+//                 {/* <div className='flex flex-col justify-end items-end w-full'> */}
+//                 <div className="overflow-y-auto h-[70%] p-4">
+//     {/* Assuming DocumentVerificationResult is available in the scope */}
+  
+//     {documents.map((doc, index) => {
+//     // Find the corresponding verification results for the document
+//     const verificationResults = DocumentVerificationReuslt.filter(result =>
+//         result[1] === Number(doc.Number) // Match document number
+//     );
+
+//     return (
+//         <div key={doc.Number} className='verification-doc'>
+//             <div>
+//                 {verificationResults.length > 0 ? (
+//                     <div>
+//                         <div className='w-[100%] flex h-max border-[#6A6A6A] py-3 border-[1px] my-10'>
+//                             <p className='ml-5 font-[700]'>{counter}. {doc.Description}</p>
+//                         </div>
+//                         {verificationResults.map((result, index) => (
+//                             <div key={doc.Number}>
+//                                 {Object.entries(result[0]).map(([pointKey, pointDetails]) => (
+//                                     <div key={`${doc.Number}-${pointKey}`} className='point-details flex items-center mt-8 ml-4'>
+//                                         <div
+//                                             className="flex justify-center items-center h-4 w-4 rounded-full cursor-pointer mr-2 "
+//                                             onClick={() => handleCheckboxChange(doc.Number, pointKey)}
+//                                         >
+//                                             {verificationStates[doc.Number]?.[pointKey] !== undefined ? (
+//                                                 verificationStates[doc.Number][pointKey] ? (
+//                                                     <div className='flex h-6 w-6 border-4 border-[#6A6A6A] justify-center items-center rounded-md'>
+//                                                         <svg width="21" height="17" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+//                                                             <path d="M2.05272 7.88769L7.84985 13.9007L15.7297 5.72777L19.414 1.78191" stroke="#1EB953" strokeWidth="3" />
+//                                                         </svg>
+//                                                     </div>
+//                                                 ) : (
+//                                                     <div className='flex h-6 w-6 border-4 border-[#6A6A6A] justify-center items-center rounded-md'>
+//                                                         <svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+//                                                             <path d="M1.57971 16.2181L7.36951 10.0323L11.3094 5.94586L14.9937 2" stroke="#C80000" strokeWidth="3" />
+//                                                             <path d="M15.573 15.6228L9.23405 10.0011L5.04327 6.17233L0.99991 2.59534" stroke="#C80000" strokeWidth="3" />
+//                                                         </svg>
+//                                                     </div>
+//                                                 )
+//                                             ) : (
+//                                                 pointDetails.verified_in_doc ? (
+//                                                     <div className='flex h-6 w-6 border-4 border-[#6A6A6A] justify-center items-center rounded-md'>
+//                                                         <svg width="21" height="17" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+//                                                             <path d="M2.05272 7.88769L7.84985 13.9007L15.7297 5.72777L19.414 1.78191" stroke="#1EB953" strokeWidth="3" />
+//                                                         </svg>
+//                                                     </div>
+//                                                 ) : (
+//                                                     <div className='flex h-6 w-6 border-4 border-[#6A6A6A] justify-center items-center rounded-md'>
+//                                                         <svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+//                                                             <path d="M1.57971 16.2181L7.36951 10.0323L11.3094 5.94586L14.9937 2" stroke="#C80000" strokeWidth="3" />
+//                                                             <path d="M15.573 15.6228L9.23405 10.0011L5.04327 6.17233L0.99991 2.59534" stroke="#C80000" strokeWidth="3" />
+//                                                         </svg>
+//                                                     </div>
+//                                                 )
+//                                             )}
+//                                         </div>
+                                        
+//                                         <div className='flex flex-row w-full'>
+//                                             <p className='leading-loose w-[80%]'>{pointDetails.description}</p>
+                                            
+//                                         </div>
+//                                     </div>
+//                                 ))}
+//                                 <div  className='flex flex-row w-full  justify-end'>
+//                                  <div className=' border border-gray-400 w-[20%] flex flex-col h-full justify-end items-start    '>
+//                             {Object.entries(payload).map(([fileName, docNumber]) => {
+//                                 if (docNumber === String(doc.Number)) {
+//                                     return (
+//                                         <div className='flex flex-col'>
+//                                         <button
+//                                             key={fileName}
+//                                             className='px-3 py-1 text-black rounded-md'
+//                                             onClick={() => handleButtonClick1(fileName)} // Send the full file name
+//                                         >
+//                                             {fileName.replace('.pdf', '')} {/* Display the base file name without .pdf */}
+//                                         </button>
+//                                         </div>
+//                                     );
+//                                 }
+//                                 return null; // Do not render anything if the file has already been displayed
+//                             })}
+//                         </div>
+//                             </div>
+//                             </div>
+//                         ))}
+
+//                         {/* Render the button only once for the document */}
+                       
+
+//                         {pdfUrl1 && (
+//                             <PdfOverlay
+//                                 url={pdfUrl1}
+//                                 onAccept={handleAccept}
+//                                 onReject={handleReject}
+//                                 onClose={() => setPdfUrl1(null)}
+//                             />
+//                         )}
+//                     </div>
+//                 ) : (
+//                     null
+//                 )}
+//             </div>
+//         </div>
+//     );
+// })}
+
+// </div>
+// </div>
+
+
+//           // </div>
+//           ) : (
+//             <div className="flex flex-col absolute w-[92%] h-[100%]">
+//               <div className='flex w-[100%] h-[15%] border-b-[1px] border-[#959191] py-[60px]'>
+//                 <VerifyStatus />
+//               </div>
+//               <div className="flex w-[100%] h-[15%] py-[60px] justify-center items-center">
+//                 <div className='w-[300px] h-9 bg-[#2B333E] text-center font-[500] text-[18px] text-white items-center'>
+//                   Documents Required
+//                 </div>
+//               </div>
+//               <div className='w-full h-full flex flex-col justify-center items-center -mt-40'>
+//                 <Document_Verification />
+//               </div>
+//             </div>
+//           )
+//         ) : (
+//           <div className="flex flex-col absolute w-[92%] h-[100%]">
+//             <div className='flex w-[100%] h-[15%] border-b-[1px] border-[#959191] py-[60px]'>
+//               <VerifyStatus />
+//             </div>
+//             <div className="flex w-[100%] h-[15%] py-[60px] justify-center items-center">
+//               <div className='w-[300px] h-9 bg-[#2B333E] text-center font-[500] text-[18px] text-white items-center'>
+//                 Documents Required
+//               </div>
+//             </div>
+//             <div className="overflow-y-auto h-[70%] p-4">
+//     {documents.map((doc, rowIndex) => (
+//         <div key={rowIndex} className='flex flex-col mb-6'>
+//             <div className='w-[100%] flex h-max border-[#6A6A6A] py-3 border-[1px] my-1'>
+//                 <p className='ml-5 font-[700]'>{doc.Number}. {doc.Description}</p>
+//             </div>
+//             <div className='relative w-full'>
+//                 <div className='w-[1000px] grid grid-cols-3 gap-x-0 gap-y-5 my-5'>
+//                     {(addedFiles[doc.Number] || []).map((button, buttonIndex) => {
+//                         const existingButtonsCount = filteredEntries.filter(([_, value]) => Number(value) === rowIndex + 1).length;
+//                         const newButtonIndex = existingButtonsCount + buttonIndex;
+
+//                         return (
+//                             <div className='relative flex border border-[#6A6A6A] flex-row rounded-full h-[46px] w-60 justify-center ' key={`added-${rowIndex}-${newButtonIndex}`}>
+//                                 <button
+//                                     className={`w-max `}
+//                                     onClick={() => handleButtonClick(button, rowIndex, newButtonIndex)}
+//                                 >
+//                                     <p className='text-center text-xs'>{button}</p>
+//                                 </button>
+//                                 <button 
+//                                     className="mr-5 w-[20%]  font-[1000] flex flex-row justify-end items-center"
+//                                     onClick={() => handleRemoveFile(button, doc.Number)} // Handle removal
+//                                 >
+//                                     -
+//                                 </button>
+//                             </div>
+//                         );
+//                     })}
+//                     {filteredEntries
+//                         .filter(([filteredKey, filteredValue]) => Number(filteredValue) === rowIndex + 1)
+//                         .map(([filteredKey], buttonIndex) => {
+//                             const existingButtonIndex = buttonIndex;
+//                             return (
+//                                 !addedFiles[doc.Number]?.includes(filteredKey) && (
+//                                     <div className='relative flex border border-[#6A6A6A] flex-row rounded-full h-[46px] w-60 justify-center' key={`filtered-${rowIndex}-${existingButtonIndex}`}>
+//                                         <button
+//                                             className='w-max '
+//                                             onClick={() => handleButtonClick(filteredKey, rowIndex, existingButtonIndex)}
+//                                         >
+//                                             <p className='text-center text-xs'>{filteredKey}</p>
+//                                         </button>
+//                                         <button className="mr-5 w-[20%] font-[1000] flex flex-row justify-end items-center"    onClick={() => handleRemoveFile(fileName, doc.Number)} >
+//                                             -
+//                                         </button>
+//                                     </div>
+//                                 )
+//                             );
+//                         })}
+//                 </div>
+//                 <div className='absolute right-0 top-0 my-4 flex items-center'>
+//                     <button
+//                         className='relative flex flex-row rounded-full h-[36px] w-24 items-center bg-white border border-[#2882ff] ml-2'
+//                         onClick={() => handleAddFilesClick(rowIndex)}
+//                     >
+//                         <p className='text-blue-400 px-2 font-[600]'>Add Files</p>
+//                         <p className='absolute right-2 text-blue-400 font-[1000]'>+</p>
+//                     </button>
+//                 </div>
+//             </div>
+//         </div>
+//     ))}
+//     {showFiles && (
+//         <Overlay
+//             files={nullFiles}
+//             onClose={() => setShowFiles(false)}
+//             onFileSelect={handleFileSelect}
+//         />
+//     )}
+//     {pdfUrl && (
+//         <PdfOverlay
+//             url={pdfUrl}
+//             onAccept={handleAccept}
+//             onReject={handleReject}
+//             onClose={() => setPdfUrl(null)}
+//         />
+//     )}
+// </div>
+//             <div className='flex flex-row w-full h-20 items-center justify-center'>
+//               <button
+//                 className='relative flex flex-row rounded-full h-[36px] w-24 items-center bg-white border border-[#2882ff] ml-2'
+//                 onClick={handleProceedClick}
+//               >
+//                 <p className='text-blue-400 px-2 font-[600]'>Proceed</p>
+//                 <p className='absolute right-2 text-blue-400 font-[1000]'></p>
+//               </button>
+//             </div>
+//           </div>
+//         )
+//       );
+      
+// };
+
+// export default VerifyResults;
+
+
+
+
+// import React, { useState, useEffect , useContext} from 'react';
+// import VerifyStatus from './VerifyStatus';
+// import Overlay from './Overlay';
+// import PdfOverlay from './PdfOverlay'; 
+// import axios from 'axios'; 
+// import { UserContext } from '../UserContext/UserContext';
+// import Verification_Docs from './Verification_Docs';
+// import Document_Verification from './Document_Verification';
+// import Document_Review from './Document_Review';
+// const VerifyResults = ({ apiResponseData }) => 
+    
+//     {
+
+
+//         const { token } = useContext(UserContext);
+//         console.log("token", token);
+
+
+//     const getNullValueFiles = (documents) => {
+//         return Object.entries(documents)
+//             .filter(([_, value]) => value === null)
+//             .map(([key, _]) => key);
+//     };
+
+//     useEffect(() => {
+//         if (apiResponseData) {
+//             const nullFiles = getNullValueFiles(apiResponseData);
+//             setNullFiles(nullFiles);
+//         }
+//     }, [apiResponseData]);
+
+//     const filterDataWithValues = (data) => {
+//         return Object.entries(data)
+//             .filter(([_, value]) => value !== null)
+//             .reduce((acc, [key, value]) => {
+//                 acc[key] = value;
+//                 return acc;
+//             }, {});
+//     };
+
+//     const [documents, setDocuments] = useState([]);
+//     const [showFiles, setShowFiles] = useState(false);
+//     const [selectedButton, setSelectedButton] = useState(null);
+//     const [availableFiles, setAvailableFiles] = useState([]);
+//     const [nullFiles, setNullFiles] = useState([]);
+//     const [addedFiles, setAddedFiles] = useState({});
+//     const [pdfUrl, setPdfUrl] = useState(null);
+//     const [pdfUrl1 , setPdfUrl1] = useState(null);
+//     const [buttonStates, setButtonStates] = useState({});
+//     const [currentRowIndex, setCurrentRowIndex] = useState(null);
+//     const [newButtonFlag, setNewButtonFlag] = useState(false);
+//     const [selectedButtonIndex, setSelectedButtonIndex] = useState(null);
+//     const [verificationResult, setVerificationResult] = useState(null);
+//     const [isVerificationPending, setIsVerificationPending] = useState(false);
+//     const [DocumentVerificationReuslt , setDocumentsVerificationReuslt] = useState([])
+//     const [counter , SetCounter] = useState(1)
+//     const [payload , setPayload] = useState()
+//     const fetchDocuments = async () => {
+//         try {
+//             const response = await axios.post('https://192.168.18.251:8010/GetRequiredDocumentsJson_Filed_46A/');
+//             if (response.status === 200) {
+//                 const data = response.data;
+//                 if (data.points && Array.isArray(data.points)) {
+//                     setDocuments(data.points);
+//                 } else {
+//                     console.warn("No points found in response");
+//                 }
+//             } else {
+//                 console.error("API returned an unexpected status:", response.status);
+//             }
+
+//             console.log("Response: " + JSON.stringify(response));
+//         } catch (error) {
+//             console.error('Error fetching documents:', error);
+//         }
+//     };
+
+//     useEffect(() => {
+//         fetchDocuments();
+//     }, []);
+
+//     useEffect(() => {
+//         if (apiResponseData && apiResponseData.points) {
+//             setDocuments(apiResponseData.points);
+//         }
+//     }, [apiResponseData]);
+
+//     const handleAddFilesClick = (rowIndex) => {
+//         setCurrentRowIndex(rowIndex);
+//         setShowFiles(true);
+//     };
+
+
+
+    
+//     const handleFileSelect = (fileName) => {
+//         console.log("File selected:", fileName);
+//         if (currentRowIndex !== null) {
+//             const newAddedFiles = { ...addedFiles };
+//             const documentKey = documents[currentRowIndex]?.Number;
+//             console.log("row", documentKey);
+    
+//             if (!newAddedFiles[documentKey]) {
+//                 newAddedFiles[documentKey] = [];
+//             }
+    
+//             // Count both existing filteredEntries and already added files for the row
+//             const existingButtonsCount = filteredEntries.filter(([_, value]) => Number(value) === currentRowIndex + 1).length;
+//             const addedButtonsCount = newAddedFiles[documentKey].length;
+    
+//             // The new button index should be the sum of both counts
+//             const newButtonIndex = existingButtonsCount + addedButtonsCount;
+    
+//             // Add the new file to the list for the current row
+//             if (fileName !== null) {
+//                 newAddedFiles[documentKey].push(fileName); // Add new file at the end
+//                 handleFileAddition(fileName);
+//                 setNewButtonFlag(true); // Set flag for new button
+//             } else {
+//                 newAddedFiles[documentKey].push(null); // Add new file at the end
+//                 handleFileAddition(null);
+//                 setNewButtonFlag(true); // Set flag for new button
+//             }
+    
+//             setAddedFiles(newAddedFiles);
+//             setShowFiles(false);
+//             setCurrentRowIndex(null);
+//         }
+//     };
+    
+    
+    
+//     const handleFileAddition = (newFileName) => {
+//         setAvailableFiles(prevFiles => {
+//             if (newFileName === null || !prevFiles.includes(newFileName)) {
+//                 return [newFileName, ...prevFiles]; // Add new file at the beginning
+//             }
+//             return prevFiles;
+//         });
+//     };
+
+//     const handleButtonClick = async (fileName, rowIndex, buttonIndex) => {
+//         try {
+//             const response = await axios.post('https://192.168.18.251:8010/get_requiredFile/', {
+//                 filename: fileName
+//             }, {
+//                 responseType: 'blob'
+//             });
+
+//             const fileUrl = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+            
+//             setPdfUrl(fileUrl);
+//             setSelectedButton({ rowIndex, buttonIndex });
+//         } catch (error) {
+//             console.error('Error fetching or downloading the PDF file:', error);
+//         }
+//     };
+//     const handleButtonClick1 = async (fileName) => {
+//       try {
+//           const response = await axios.post('https://192.168.18.251:8010/get_requiredFile/', {
+//               filename: fileName
+//           }, {
+//               responseType: 'blob'
+//           });
+
+//           const fileUrl = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+          
+//           setPdfUrl1(fileUrl);
+         
+//       } catch (error) {
+//           console.error('Error fetching or downloading the PDF file:', error);
+//       }
+//   };
+//     const [showVerificationDocs, setShowVerificationDocs] = useState(false);
+ 
+//     const handleProceedClick = async () => {
+//       const payload1 = {};
+  
+//       documents.forEach((doc) => {
+//           const documentNumber = String(doc.Number); // Convert document number to a string
+  
+//           // Get added files for the current document row
+//           const addedFilesForRow = addedFiles[documentNumber] || [];
+          
+//           // Get filtered files for the current document row
+//           const filteredFilesForRow = filteredEntries
+//               .filter(([filteredKey, filteredValue]) => Number(filteredValue) === doc.Number)
+//               .map(([filteredKey]) => filteredKey);
+          
+//           // Combine added and filtered files
+//           const allFilesForRow = [...addedFilesForRow, ...filteredFilesForRow];
+          
+//           // If there are any files for the row, construct the payload
+//           if (allFilesForRow.length > 0) {
+//               allFilesForRow.forEach((fileName) => {
+//                   // Set the payload with the document name (including extension) and document number as a string
+//                   payload1[fileName] = documentNumber;
+//               });
+//           }
+//       });
+  
+//       console.log("payload", payload1);
+      
+//       // To ensure you're using the correct payload in the API call, use payload1 directly
+//       try {
+//           const response = await axios.post('https://192.168.18.251:8010/store_documents/', payload1, {
+//               headers: {
+//                   'Authorization': `Bearer ${token}`,
+//                   'Content-Type': 'application/json'
+//               }
+//           });
+          
+//           if (response.status === 200) {
+//               console.log('Documents successfully stored:', response.data.data);
+//               setVerificationResult(true);
+//               setIsVerificationPending(true);
+//               setPayload(response.data.data); // Store the response data
+//               console.log('Payload successfully stored:', response.data); 
+//               startVerificationPolling()// Log the stored response data
+//           } else {
+//               console.error('Error storing documents:', response.status);
+//           }
+//       } catch (error) {
+//           console.error('Error during the POST request:', error);
+//       }
+//   };
+  
+  
+//   const pollVerificationStatus = async () => {
+//     let hasCheckedOnce = false; // Flag to ensure the second API is only called once
+
+//     // Polling function to call the first API every 10 seconds
+//     while (!hasCheckedOnce) {
+//         try {
+//             // Call the first verification API
+//             const response = await axios.post('https://192.168.18.251:8010/DocumentsDetailedVerification/', {
+//                 timeout: 300000, // Set timeout to 5 minutes
+//             });
+
+//             if (response.data.message === 'OK') {
+//                 console.log('Verification completed successfully');
+//                 hasCheckedOnce = true; // Mark that the second API should be called only once
+
+//                 // Call the second API after waiting for 10 seconds
+//                 await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait 10 seconds
+//                 await fetchDetailedVerificationResult(); 
+//             } else {
+//                 console.log('Verification still pending or other status:', response.data.message);
+//             }
+//         } catch (error) {
+//             console.error('Error fetching verification status:', error);
+//         }
+
+//         // Wait 10 seconds before the next poll if result is not 'OK'
+//         if (!hasCheckedOnce) {
+//             await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait 10 seconds
+//         }
+//     }
+// };
+
+
+// const fetchDetailedVerificationResult = async () => {
+//     try {
+//         // Loop to check verification status
+//         while (true) {
+//             // Call the second API for detailed verification result
+//             const response = await axios.post('https://192.168.18.251:8010/DetailedVerificationResult/', {
+//                 timeout: 300000, // Set timeout to 5 minutes
+//             });
+
+//             const message = response.data.message || '';
+//             console.log('Verification message:', message);
+
+//             // Check if the message contains the verification status
+//             if (message.startsWith("Query after some time, documents verification is in process. Total Steps :")) {
+//                 // Optionally, extract the current step
+//                 const currentStepInfo = message.split("| Current Step ");
+//                 if (currentStepInfo.length > 1) {
+//                     const currentStep = currentStepInfo[1];
+//                     console.log(`Current Step: ${currentStep}`);
+//                 }
+                
+//                 // Wait for a specified time before checking again
+//                 await new Promise(resolve => setTimeout(resolve, 10000)); // 10 seconds
+//             } else {
+//                 // If the message is not as expected, exit the loop
+//                 console.log('Verification complete or an unexpected message received.');
+//                 setDocumentsVerificationReuslt(response.data);
+//                 setIsVerificationPending(false); // Stop showing verification pending
+//                 setShowVerificationDocs(true); // Show the detailed verification results
+//                 break; // Exit the loop
+//             }
+//         }
+//     } catch (error) {
+//         console.error('Error fetching detailed verification result:', error);
+//     }
+// };
+
+
+// // Call this function whenever you want to start polling, e.g., on a button click
+// const startVerificationPolling = () => {
+
+//         pollVerificationStatus(); // Start the async polling function
+    
+// };
+
+
+
+
+
+
+//     const [verificationStates, setVerificationStates] = useState({});
+
+//     const handleCheckboxChange = (docNumber, pointKey) => {
+//       setVerificationStates(prevStates => ({
+//           ...prevStates,
+//           [docNumber]: {
+//               ...prevStates[docNumber],
+//               [pointKey]: !prevStates[docNumber]?.[pointKey], // Toggle for specific pointKey within the document
+//           }
+//       }));
+//   };
+  
+
+//     useEffect(() => {
+//         console.log("Button states updated:", buttonStates);
+//     }, [buttonStates]);
+    
+
+//     const handleAccept = () => {
+//         if (selectedButton) {
+//             console.log("Selected button:", selectedButton);
+    
+//             setButtonStates(prevStates => {
+//                 // Log the previous states for debugging
+//                 console.log("Previous states:", prevStates);
+    
+//                 const newStates = {
+//                     ...prevStates,
+//                     [`${selectedButton.rowIndex}-${selectedButton.buttonIndex}`]: 'green'
+//                 };
+    
+//                 // Log the new states for debugging
+//                 console.log("New states:", newStates);
+    
+//                 return newStates;
+//             });
+    
+//             // Here, buttonStates might not be updated yet
+//             // This log might show the old state
+//             console.log("New state that is set", buttonStates);
+//         } else {
+//             console.warn("No button selected");
+//         }
+    
+//         setPdfUrl(null);
+//     };
+    
+
+//     const handleReject = () => {
+//         if (selectedButton) {
+//             setButtonStates(prevStates => ({
+//                 ...prevStates,
+//                 [`${selectedButton.rowIndex}-${selectedButton.buttonIndex}`]: 'red'
+//             }));
+//         }
+//         setPdfUrl(null);
+//     };
+
+//     const filteredData = filterDataWithValues(apiResponseData || {});
+//     const filteredEntries = Object.entries(filteredData);
+
+//     // Adjust button indexes when a new button is added
+//     useEffect(() => {
+//         if (newButtonFlag) {
+//             setNewButtonFlag(false); // Reset the flag
+//         }
+//     }, [newButtonFlag]);
+
+//     return (
+//         verificationResult ? (
+//           showVerificationDocs ? (
+           
+//             <div className="flex flex-col absolute w-[92%] h-[100%]">
+//             <div className='flex w-[100%] h-[15%] border-b-[1px] border-[#959191] py-[60px]'>
+//               <VerifyStatus />
+//             </div>
+//             <div className="flex flex-col w-[100%] h-[15%] py-[60px] justify-center items-center">
+//               <div className='w-[300px] h-9 bg-[#2B333E] text-center font-[500] text-[20px]  text-white items-center'>
+//                 Documents Verification
+ 
+               
+//               </div>
+             
+//             </div>
+//             <div className='flex flex-col justify-end items-end w-full   '>
+//                  <span>
+//                  <Document_Review/>
+//                  </span>
+//                 </div>
+//                 <Verification_Docs />
+//                 {/* <div className='flex flex-col justify-end items-end w-full'> */}
+//                 <div className="overflow-y-auto h-[70%] p-4">
+//     {/* Assuming DocumentVerificationResult is available in the scope */}
+  
+//     {documents.map((doc, index) => {
+//     // Log the current state of DocumentVerificationReuslt
+//     console.log("DocumentVerificationReuslt:", DocumentVerificationReuslt);
+
+//     // Find the corresponding verification results for the document
+//     const verificationResults = Array.isArray(DocumentVerificationReuslt)
+//         ? DocumentVerificationReuslt.filter(result =>
+//             result[1] === Number(doc.Number) // Match document number
+//         )
+//         : []; 
+    
+//     return (
+//         <div key={doc.Number} className='verification-doc'>
+//             <div>
+//                 {verificationResults.length > 0 ? (
+//                     <div>
+//                         <div className='w-[100%] flex h-max border-[#6A6A6A] py-3 border-[1px] my-10'>
+//                             <p className='ml-5 font-[700]'>{counter}. {doc.Description}</p>
+//                         </div>
+//                         {verificationResults.map((result, index) => (
+//                             <div key={doc.Number}>
+//                                 {Object.entries(result[0]).map(([pointKey, pointDetails]) => (
+//                                     <div key={`${doc.Number}-${pointKey}`} className='point-details flex items-center mt-8 ml-4'>
+//                                         <div
+//                                             className="flex justify-center items-center h-4 w-4 rounded-full cursor-pointer mr-2 "
+//                                             onClick={() => handleCheckboxChange(doc.Number, pointKey)}
+//                                         >
+//                                             {verificationStates[doc.Number]?.[pointKey] !== undefined ? (
+//                                                 verificationStates[doc.Number][pointKey] ? (
+//                                                     <div className='flex h-6 w-6 border-4 border-[#6A6A6A] justify-center items-center rounded-md'>
+//                                                         <svg width="21" height="17" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+//                                                             <path d="M2.05272 7.88769L7.84985 13.9007L15.7297 5.72777L19.414 1.78191" stroke="#1EB953" strokeWidth="3" />
+//                                                         </svg>
+//                                                     </div>
+//                                                 ) : (
+//                                                     <div className='flex h-6 w-6 border-4 border-[#6A6A6A] justify-center items-center rounded-md'>
+//                                                         <svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+//                                                             <path d="M1.57971 16.2181L7.36951 10.0323L11.3094 5.94586L14.9937 2" stroke="#C80000" strokeWidth="3" />
+//                                                             <path d="M15.573 15.6228L9.23405 10.0011L5.04327 6.17233L0.99991 2.59534" stroke="#C80000" strokeWidth="3" />
+//                                                         </svg>
+//                                                     </div>
+//                                                 )
+//                                             ) : (
+//                                                 pointDetails.verified_in_doc ? (
+//                                                     <div className='flex h-6 w-6 border-4 border-[#6A6A6A] justify-center items-center rounded-md'>
+//                                                         <svg width="21" height="17" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+//                                                             <path d="M2.05272 7.88769L7.84985 13.9007L15.7297 5.72777L19.414 1.78191" stroke="#1EB953" strokeWidth="3" />
+//                                                         </svg>
+//                                                     </div>
+//                                                 ) : (
+//                                                     <div className='flex h-6 w-6 border-4 border-[#6A6A6A] justify-center items-center rounded-md'>
+//                                                         <svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+//                                                             <path d="M1.57971 16.2181L7.36951 10.0323L11.3094 5.94586L14.9937 2" stroke="#C80000" strokeWidth="3" />
+//                                                             <path d="M15.573 15.6228L9.23405 10.0011L5.04327 6.17233L0.99991 2.59534" stroke="#C80000" strokeWidth="3" />
+//                                                         </svg>
+//                                                     </div>
+//                                                 )
+//                                             )}
+//                                         </div>
+                                        
+//                                         <div className='flex flex-row w-full'>
+//                                             <p className='leading-loose w-[80%]'>{pointDetails.description}</p>
+                                            
+//                                         </div>
+//                                     </div>
+//                                 ))}
+//                                 <div  className='flex flex-row w-full  justify-end'>
+//                                  <div className=' border border-gray-400 w-[20%] flex flex-col h-full justify-end items-start    '>
+//                             {Object.entries(payload).map(([fileName, docNumber]) => {
+//                                 if (docNumber === String(doc.Number)) {
+//                                     return (
+//                                         <div className='flex flex-col'>
+//                                         <button
+//                                             key={fileName}
+//                                             className='px-3 py-1 text-black rounded-md'
+//                                             onClick={() => handleButtonClick1(fileName)} // Send the full file name
+//                                         >
+//                                             {fileName.replace('.pdf', '')} {/* Display the base file name without .pdf */}
+//                                         </button>
+//                                         </div>
+//                                     );
+//                                 }
+//                                 return null; // Do not render anything if the file has already been displayed
+//                             })}
+//                         </div>
+//                             </div>
+//                             </div>
+//                         ))}
+
+//                         {/* Render the button only once for the document */}
+                       
+
+//                         {pdfUrl1 && (
+//                             <PdfOverlay
+//                                 url={pdfUrl1}
+//                                 onAccept={handleAccept}
+//                                 onReject={handleReject}
+//                                 onClose={() => setPdfUrl1(null)}
+//                             />
+//                         )}
+//                     </div>
+//                 ) : (
+//                     null
+//                 )}
+//             </div>
+//         </div>
+//     );
+// })}
+
+// </div>
+// </div>
+
+
+//           // </div>
+//           ) : (
+//             <div className="flex flex-col absolute w-[92%] h-[100%]">
+//               <div className='flex w-[100%] h-[15%] border-b-[1px] border-[#959191] py-[60px]'>
+//                 <VerifyStatus />
+//               </div>
+//               <div className="flex w-[100%] h-[15%] py-[60px] justify-center items-center">
+//                 <div className='w-[300px] h-9 bg-[#2B333E] text-center font-[500] text-[18px] text-white items-center'>
+//                   Documents Required
+//                 </div>
+//               </div>
+//               <div className='w-full h-full flex flex-col justify-center items-center -mt-40'>
+//                 <Document_Verification />
+//               </div>
+//             </div>
+//           )
+//         ) : (
+//           <div className="flex flex-col absolute w-[92%] h-[100%]">
+//             <div className='flex w-[100%] h-[15%] border-b-[1px] border-[#959191] py-[60px]'>
+//               <VerifyStatus />
+//             </div>
+//             <div className="flex w-[100%] h-[15%] py-[60px] justify-center items-center">
+//               <div className='w-[300px] h-9 bg-[#2B333E] text-center font-[500] text-[18px] text-white items-center'>
+//                 Documents Required
+//               </div>
+//             </div>
+//             <div className="overflow-y-auto h-[70%] p-4">
+//               {documents.map((doc, rowIndex) => (
+//                 <div key={rowIndex} className='flex flex-col mb-6'>
+//                   <div className='w-[100%] flex h-max border-[#6A6A6A] py-3 border-[1px] my-1'>
+//                     <p className='ml-5 font-[700]'>{doc.Number}. {doc.Description}</p>
+//                   </div>
+//                   <div className='relative w-full'>
+//                     <div className='w-[1000px] grid grid-cols-3 gap-x-0 gap-y-5 my-5'>
+//                       {(addedFiles[doc.Number] || []).map((button, buttonIndex) => {
+//                         const existingButtonsCount = filteredEntries.filter(([_, value]) => Number(value) === rowIndex + 1).length;
+//                         const newButtonIndex = existingButtonsCount + buttonIndex; // New button index
+//                         return (
+//                           <button
+//                             key={`added-${rowIndex}-${newButtonIndex}`}
+//                             className={`relative flex flex-row rounded-full h-[46px] w-60 justify-center items-center ${
+//                               buttonStates[`${rowIndex}-${newButtonIndex}`] === 'green' ? 'bg-green-500 text-white' :
+//                               buttonStates[`${rowIndex}-${newButtonIndex}`] === 'red' ? 'bg-red-500 text-white' :
+//                               'bg-white border border-[#6A6A6A]'
+//                             }`}
+//                             onClick={() => handleButtonClick(button, rowIndex, newButtonIndex)}
+//                           >
+//                             <p className='text-center text-xs'>{button}</p>
+//                             <a className='absolute right-4 font-[1000]'>-</a>
+//                           </button>
+//                         );
+//                       })}
+//                       {filteredEntries
+//                         .filter(([filteredKey, filteredValue]) => Number(filteredValue) === rowIndex + 1)
+//                         .map(([filteredKey], buttonIndex) => {
+//                           const existingButtonIndex = buttonIndex;
+//                           return (
+//                             !addedFiles[doc.Number]?.includes(filteredKey) && (
+//                               <button
+//                                 key={`filtered-${rowIndex}-${existingButtonIndex}`}
+//                                 className={`relative flex flex-row rounded-full h-[46px] w-60 justify-center items-center ${
+//                                   buttonStates[`${rowIndex}-${existingButtonIndex}`] === 'green' ? 'bg-green-500 text-white' :
+//                                   buttonStates[`${rowIndex}-${existingButtonIndex}`] === 'red' ? 'bg-red-500 text-white' :
+//                                   'bg-white border border-[#6A6A6A]'
+//                                 }`}
+//                                 onClick={() => handleButtonClick(filteredKey, rowIndex, existingButtonIndex)}
+//                               >
+//                                 <p className='text-center text-xs'>{filteredKey}</p>
+//                                 <a className='absolute right-4 font-[1000]'>-</a>
+//                               </button>
+//                             )
+//                           );
+//                         })}
+//                     </div>
+//                     <div className='absolute right-0 top-0 my-4 flex items-center'>
+//                       <button
+//                         className='relative flex flex-row rounded-full h-[36px] w-24 items-center bg-white border border-[#2882ff] ml-2'
+//                         onClick={() => handleAddFilesClick(rowIndex)}
+//                       >
+//                         <p className='text-blue-400 px-2 font-[600]'>Add Files</p>
+//                         <p className='absolute right-2 text-blue-400 font-[1000]'>+</p>
+//                       </button>
+//                     </div>
+//                   </div>
+//                 </div>
+//               ))}
+//               {showFiles && (
+//                 <Overlay
+//                   files={nullFiles}
+//                   onClose={() => setShowFiles(false)}
+//                   onFileSelect={handleFileSelect}
+//                 />
+//               )}
+//               {pdfUrl && (
+//                 <PdfOverlay
+//                   url={pdfUrl}
+//                   onAccept={handleAccept}
+//                   onReject={handleReject}
+//                   onClose={() => setPdfUrl(null)}
+//                 />
+//               )}
+//             </div>
+//             <div className='flex flex-row w-full h-20 items-center justify-center'>
+//               <button
+//                 className='relative flex flex-row rounded-full h-[36px] w-24 items-center bg-white border border-[#2882ff] ml-2'
+//                 onClick={handleProceedClick}
+//               >
+//                 <p className='text-blue-400 px-2 font-[600]'>Proceed</p>
+//                 <p className='absolute right-2 text-blue-400 font-[1000]'></p>
+//               </button>
+//             </div>
+//           </div>
+//         )
+//       );
+      
+// };
+
+// export default VerifyResults;
+
+
+
+
+
+
+
+
+
+
+const fetchDetailedVerificationResult = async () => {
+    try {
+        // Loop to check verification status
+        while (true) {
+            // Call the second API for detailed verification result
+            const response = await axios.post('https://192.168.18.251:8010/DetailedVerificationResult/', {
+                timeout: 300000, // Set timeout to 5 minutes
+            });
+
+            console.log("Checking " , response)
+
+            const message = response.data.message || '';
+            console.log('Verification message:', message);
+
+            const data = response
+
+            if (response.ok && data.message) {
+
+              const message1 = data.message;
+              const totalSteps = message1.match(/Total Steps : (\d+)/);
+              console.log("Total steps : " , totalSteps);
+              const processedMatch = message1.match(/Current Steps : (\d+)/);
+              console.log("Current steps : " , processedMatch)
+
+
+              if (totalSteps && processedMatch) {
+                const total = parseInt(totalMatch[1], 10);
+                const processed = parseInt(processedMatch[1], 10);
+  
+                setTotalDocument(total)
+
+                setProcessedDocument(processed)
+  
+                if (processed >= total) {
+                  console.log('All documents processed.');
+                  
+                  // Add a small delay to display the progress bar at 100% before moving on
+                  await new Promise(resolve => setTimeout(resolve, 5000)); // 2 seconds delay
+                  break;
+                }
+              }
+            }
+            else if (!data.message) {
+                // When no more message exists, show the progress bar for 5 seconds
+                const check = parseInt(totalMatch[1], 10)
+                console.log("Docuemnts Count" , check)
+                console.log('Verification complete, waiting to show final results.');
+                console.log('Verification complete or an unexpected message received.');
+                setDocumentsVerificationReuslt(response.data);
+                setPayloader(response.data);
+                setIsVerificationPending(false); // Stop showing verification pending
+                setShowVerificationDocs(true); // Show the detailed verification results
+                break; // Exit the loop
+           
+              }
+
+            // Check if the message contains the verification status
+            // if (message.startsWith("Query after some time, documents verification is in process. Total Steps :")) {
+            //     // Optionally, extract the current step
+            //     const currentStepInfo = message.split("| Current Step ");
+            //     if (currentStepInfo.length > 1) {
+            //         const currentStep = currentStepInfo[1];
+            //         console.log(`Current Step: ${currentStep}`);
+            //     }
+                
+            //     // Wait for a specified time before checking again
+            //     await new Promise(resolve => setTimeout(resolve, 10000)); // 10 seconds
+            // } 
+            // else {
+            //     // If the message is not as expected, exit the loop
+            //     console.log('Verification complete or an unexpected message received.');
+            //     setDocumentsVerificationReuslt(response.data);
+            //     setPayloader(response.data);
+            //     setIsVerificationPending(false); // Stop showing verification pending
+            //     setShowVerificationDocs(true); // Show the detailed verification results
+            //     break; // Exit the loop
+            // }
+        }
+    } catch (error) {
+        console.error('Error fetching detailed verification result:', error);
+    }
+};

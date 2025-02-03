@@ -1,0 +1,7 @@
+.stroke-custom {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(#2871B5, #2871B5);
+    background-clip: text;
+  }
+

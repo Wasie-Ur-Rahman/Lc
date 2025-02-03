@@ -1,0 +1,14 @@
+{
+    "complianceBreakdown": {
+      "compliant": 45,
+      "nonCompliant": 25,
+      "partiallyCompliant": 30
+    },
+    "nonComplianceCategories": [
+      { "category": "Document Errors", "count": 20 },
+      { "category": "Missing Information", "count": 15 },
+      { "category": "Late Submission", "count": 10 },
+      { "category": "Signature Issues", "count": 5 }
+    ]
+  }
+  

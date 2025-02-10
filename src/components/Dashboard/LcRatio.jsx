@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Chart, registerables } from 'chart.js';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { Chart, registerables } from "chart.js";
+import axios from "axios";
 
 Chart.register(...registerables);
 
@@ -13,10 +13,12 @@ const DonutChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post('https://192.168.18.251:8010/Stats_getLC_FC_RATIO/');
+        const response = await axios.post(
+          "https://192.168.18.251:8003/Stats_getLC_FC_RATIO/"
+        );
         setChartData(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -24,16 +26,16 @@ const DonutChart = () => {
   }, []);
 
   useEffect(() => {
-    const ctx = document.getElementById('myDonutChart').getContext('2d');
+    const ctx = document.getElementById("myDonutChart").getContext("2d");
     const myDonutChart = new Chart(ctx, {
-      type: 'doughnut',
+      type: "doughnut",
       data: {
-        labels: ['True Count', 'False Count'],
+        labels: ["True Count", "False Count"],
         datasets: [
           {
-            label: 'Counts',
+            label: "Counts",
             data: [chartData.true_count, chartData.false_count],
-            backgroundColor: ['#39AEA9', '#A2D5AB'],
+            backgroundColor: ["#39AEA9", "#A2D5AB"],
             hoverOffset: 4,
           },
         ],
@@ -43,11 +45,11 @@ const DonutChart = () => {
         plugins: {
           title: {
             display: true,
-            text: 'LC Ratio',
+            text: "LC Ratio",
             font: {
               size: 24,
-              family: 'sans-serif',
-              weight: 'bold',
+              family: "sans-serif",
+              weight: "bold",
             },
             padding: {
               top: 10,
@@ -64,7 +66,10 @@ const DonutChart = () => {
   }, [chartData]);
 
   return (
-    <div style={{ width: '50%', height: '400px' }} className='flex flex-row justify-center items-center '>
+    <div
+      style={{ width: "50%", height: "400px" }}
+      className="flex flex-row justify-center items-center "
+    >
       <canvas id="myDonutChart"></canvas>
     </div>
   );

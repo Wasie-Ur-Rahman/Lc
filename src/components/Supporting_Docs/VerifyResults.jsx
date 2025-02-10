@@ -9,7 +9,7 @@ import Document_Verification from "./Document_Verification";
 import { useRef } from "react";
 import Document_Review from "./Document_Review";
 import Process_Completed from "./Process_Completed";
-import { FaFileAlt, FaTimes } from "react-icons/fa";
+import { FaFileAlt, FaTimes , FaInfoCircle } from "react-icons/fa";
 const VerifyResults = ({
   apiResponseData,
   documentsi,
@@ -36,6 +36,7 @@ const VerifyResults = ({
     skip,
     apiList,
     files_saved,
+    save_allinfo , setSave_allinfo , state_allinfo , setState_allinfo
   } = useContext(UserContext);
   console.log("Payload carrier see", payload_carrier);
   console.log("Files saved", files_saved);
@@ -92,6 +93,7 @@ const VerifyResults = ({
   };
 
   const captureRefs = useRef({});
+    const [isOpen1,setIsOpen1] = useState(false);
   const [documents, setDocuments] = useState([]);
   const [showFiles, setShowFiles] = useState(false);
   const [selectedButton, setSelectedButton] = useState(null);
@@ -123,7 +125,7 @@ const VerifyResults = ({
 
   // const fetchDocuments = async () => {
   //     try {
-  //         const response = await axios.post('https://192.168.18.251:8010/GetRequiredDocumentsJson_Filed_46A/');
+  //         const response = await axios.post('https://192.168.18.251:8003/GetRequiredDocumentsJson_Filed_46A/');
   //         if (response.status === 200) {
   //             const data = response.data;
   //             if (data.points && Array.isArray(data.points)) {
@@ -142,6 +144,48 @@ const VerifyResults = ({
   //         console.error('Error fetching documents:', error);
   //     }
   // };
+
+  useEffect(() => {
+        
+        const fetchLcInfo = async () => {
+          try {
+            const response = await fetch('https://192.168.18.251:8003/get_ALL_LC_INFO/', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+              },
+            });
+          
+    
+            const data = await response.json(); 
+            console.log("response from the all lc info api", data);
+    
+         
+            if (data.ALL_LC_INFO === "\"\"") {
+              console.log("Received empty ALL_LC_INFO, retrying...");
+            } else {
+            console.log("Trerminating the api" ,state_allinfo )
+            setState_allinfo(true)
+            setSave_allinfo(data);
+            console.log("The respone that is saved in the body is" , save_allinfo)
+            }
+    
+          } catch (error) {
+            console.error('Error fetching LC info:', error);
+          }
+        };
+    
+    
+        const intervalId = setInterval(() => {
+          if (!state_allinfo) { 
+            fetchLcInfo(); 
+          }
+        }, 300); 
+    
+    
+        return () => clearInterval(intervalId);
+      }, [state_allinfo]);
+
   const [overlayOpen, setOverlayOpen] = useState(false);
 
   const handleDescriptionClick = (pointDetails) => {
@@ -214,7 +258,7 @@ const VerifyResults = ({
     try {
       setPDFFlag(true);
       const response = await axios.post(
-        "https://192.168.18.251:8010/get_requiredFile/",
+        "https://192.168.18.251:8003/get_requiredFile/",
         {
           filename: fileName,
         },
@@ -251,7 +295,7 @@ const VerifyResults = ({
       setPDFFlag1(true);
       const lowerCaseFileName = fileName.replace(/\.PDF$/, ".pdf");
       const response = await axios.post(
-        "https://192.168.18.251:8010/get_requiredFile/",
+        "https://192.168.18.251:8003/get_requiredFile/",
         {
           filename: lowerCaseFileName,
         },
@@ -277,7 +321,7 @@ const VerifyResults = ({
       setPdfUrl1(fileUrl);
     } catch (error) {
       console.error("Error fetching or downloading the PDF file:", error);
-      console.error("https://192.168.18.251:8010/get_requiredFile/" + fileName);
+      console.error("https://192.168.18.251:8003/get_requiredFile/" + fileName);
     } finally {
       setPDFFlag1(false);
     }
@@ -290,7 +334,7 @@ const VerifyResults = ({
       console.log("Payloader ", payload_setter);
 
       const response = await axios.post(
-        "https://192.168.18.251:8010/proceedToReportGeneration/",
+        "https://192.168.18.251:8003/proceedToReportGeneration/",
         payload_setter,
         {
           headers: {
@@ -330,7 +374,7 @@ const VerifyResults = ({
       setFinalPage1(true);
 
       const response = await axios.post(
-        "https://192.168.18.251:8010/proceedToReportGeneration_NoAditionalDocs/",
+        "https://192.168.18.251:8003/proceedToReportGeneration_NoAditionalDocs/",
         {},
         {
           headers: {
@@ -387,7 +431,7 @@ const VerifyResults = ({
     // To ensure you're using the correct payload in the API call, use payload1 directly
     try {
       const response = await axios.post(
-        "https://192.168.18.251:8010/store_documents/",
+        "https://192.168.18.251:8003/store_documents/",
         payload1,
         {
           headers: {
@@ -421,7 +465,7 @@ const VerifyResults = ({
     // To ensure you're using the correct payload in the API call, use payload1 directly
     try {
       const response = await axios.post(
-        "https://192.168.18.251:8010/store_documents/",
+        "https://192.168.18.251:8003/store_documents/",
         payload1,
         {
           headers: {
@@ -513,7 +557,7 @@ const VerifyResults = ({
       try {
         // Call the first verification API
         const response = await axios.post(
-          "https://192.168.18.251:8010/DocumentsDetailedVerification/",
+          "https://192.168.18.251:8003/DocumentsDetailedVerification/",
           {
             timeout: 300000, // Set timeout to 5 minutes
           }
@@ -550,7 +594,7 @@ const VerifyResults = ({
       try {
         // Call the first verification API
         const response = await axios.post(
-          "https://192.168.18.251:8010/DocumentsDetailedVerification/",
+          "https://192.168.18.251:8003/DocumentsDetailedVerification/",
           {
             timeout: 300000, // Set timeout to 5 minutes
           }
@@ -589,7 +633,7 @@ const VerifyResults = ({
 
       while (true) {
         const response = await axios.post(
-          "https://192.168.18.251:8010/DetailedVerificationResult/",
+          "https://192.168.18.251:8003/DetailedVerificationResult/",
           {
             timeout: 300000,
           }
@@ -797,6 +841,55 @@ const VerifyResults = ({
         ) : !finalPage && !FinalPage1 && skip ? (
           <div className="flex flex-col absolute w-[92%] h-[100%] ">
             <div className="flex w-[100%] h-[15%] border-b-[1px] border-[#959191] py-[60px]">
+            <div className="flex flex-col  absolute w-[40%] h-full -mt-14  ">
+{state_allinfo && (
+                <div className="inline-block absolute Laptops:ml-14 h-full w-full  Laptops_L:ml-12 -ml-[70px] ">
+                    <button
+                      onClick={() => setIsOpen1(!isOpen1)}
+                      className="top-1
+                                     flex items-center justify-center w-10 h-10 rounded-full 
+                                     z-50 bg-gray-400 hover:bg-gray-600 transition duration-200"
+                    >
+                      <FaInfoCircle size={20} />
+                    </button>
+                
+                    {isOpen1 && (
+                      <div className="absolute  top-1 left-16
+                                       border border-gray-300 rounded-md bg-white shadow-md p-3 z-50 h-[96%]  overflow-auto w-full ">
+                        <div className="flex justify-between items-center mb-2">
+                          <strong className="text-sm">Lc Info</strong>
+                          <FaTimes
+                            className="cursor-pointer text-gray-500 hover:text-gray-700"
+                            onClick={() => setIsOpen1(false)}
+                          />
+                        </div>
+                        {save_allinfo.ALL_LC_INFO ? (
+                  <table className="min-w-full table-auto border-collapse border border-gray-300">
+                    <thead>
+                      <tr className="bg-gray-500">
+                        <th className="py-2 px-4 border-r border-b text-left">Key</th>
+                        <th className="py-2 px-4 border-b text-left">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(save_allinfo.ALL_LC_INFO).map(([key, value], index) => (
+                        <tr key={index}>
+                          <td className="py-2 px-4 border-r border-b">{key}</td>
+                          <td className="py-2 px-4 border-b">{value}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p className="text-gray-500">No information available</p>
+                )}
+                
+                      </div>
+                    )}
+                  </div>
+                )}
+
+</div>
               <VerifyStatus
                 uploaded={true}
                 verified={true}
@@ -837,6 +930,55 @@ const VerifyResults = ({
                   
                   "
           >
+                <div className="flex flex-col  absolute w-[40%] h-full -mt-13  ">
+{state_allinfo && (
+                <div className="inline-block absolute Laptops:-ml-10 h-full w-full  Laptops_L:-ml-10 -ml-[70px] ">
+                    <button
+                      onClick={() => setIsOpen1(!isOpen1)}
+                      className="top-1
+                                     flex items-center justify-center w-10 h-10 rounded-full 
+                                     z-50 bg-gray-400 hover:bg-gray-600 transition duration-200"
+                    >
+                      <FaInfoCircle size={20} />
+                    </button>
+                
+                    {isOpen1 && (
+                      <div className="absolute  top-1 left-16
+                                       border border-gray-300 rounded-md bg-white shadow-md p-3 z-50 h-[96%]  overflow-auto w-full ">
+                        <div className="flex justify-between items-center mb-2">
+                          <strong className="text-sm">Lc Info</strong>
+                          <FaTimes
+                            className="cursor-pointer text-gray-500 hover:text-gray-700"
+                            onClick={() => setIsOpen1(false)}
+                          />
+                        </div>
+                        {save_allinfo.ALL_LC_INFO ? (
+                  <table className="min-w-full table-auto border-collapse border border-gray-300">
+                    <thead>
+                      <tr className="bg-gray-500">
+                        <th className="py-2 px-4 border-r border-b text-left">Key</th>
+                        <th className="py-2 px-4 border-b text-left">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(save_allinfo.ALL_LC_INFO).map(([key, value], index) => (
+                        <tr key={index}>
+                          <td className="py-2 px-4 border-r border-b">{key}</td>
+                          <td className="py-2 px-4 border-b">{value}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p className="text-gray-500">No information available</p>
+                )}
+                
+                      </div>
+                    )}
+                  </div>
+                )}
+
+</div>
             <div className="flex w-[100%] h-[15%] border-b-[1px] border-[#959191] py-[60px]">
               <VerifyStatus
                 uploaded={true}
@@ -1221,43 +1363,93 @@ const VerifyResults = ({
       ) : (
         // </div>
         <div className="flex flex-col absolute w-[92%] h-[100%]">
-          {files_saved.length != 0 ? (
-            <div className="flex flex-row h-10 w-[90%]  ">
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className=" -ml-16  -top-52 Laptops:-ml-10 
-                                                     flex items-center justify-center w-10 h-10 rounded-full 
-                                                     z-50 bg-gray-400 hover:bg-gray-600 transition duration-200 "
-              >
-                <FaFileAlt size={20} />
-              </button>
-
-              {isOpen && (
-                <div
-                  className="absolute -left-3
-                                                       border border-gray-300 rounded-md bg-white shadow-md p-3 w-40 z-50"
-                >
-                  <div className="flex justify-between items-center mb-2">
-                    <strong className="text-sm">Saved Files</strong>
-                    <FaTimes
-                      className="cursor-pointer text-gray-500 hover:text-gray-700"
-                      onClick={() => setIsOpen(false)}
-                    />
-                  </div>
-                  <ul className="list-none p-0 m-0 text-sm max-h-52 overflow-y-auto">
-                    {files_saved.map((file, index) => (
-                      <li
-                        key={index}
-                        className="py-1 border-b last:border-b-0 text-gray-700"
-                      >
-                        {file.name}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+<div className="flex flex-col space-y-12 absolute w-[40%] h-full -ml-20 -mt-1">
+           {state_allinfo && (
+      <div className="flex flex-row h-10 w-[96%]  ">
+          <button
+            onClick={() => setIsOpen1(!isOpen1)}
+            className="ml-3  top-1
+                           flex items-center justify-center w-10 h-10 rounded-full 
+                           z-50 bg-gray-400 hover:bg-gray-600 transition duration-200"
+          >
+            <FaInfoCircle size={20} />
+          </button>
+      
+          {isOpen1 && (
+            <div className="absolute  top-1 left-16
+                             border border-gray-300 rounded-md bg-white shadow-md p-3 z-50 h-[96%]  overflow-auto w-full ">
+              <div className="flex justify-between items-center mb-2">
+                <strong className="text-sm">Lc Info</strong>
+                <FaTimes
+                  className="cursor-pointer text-gray-500 hover:text-gray-700"
+                  onClick={() => setIsOpen1(false)}
+                />
+              </div>
+              {save_allinfo.ALL_LC_INFO ? (
+        <table className="min-w-full table-auto border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-gray-500">
+              <th className="py-2 px-4 border-r border-b text-left">Key</th>
+              <th className="py-2 px-4 border-b text-left">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(save_allinfo.ALL_LC_INFO).map(([key, value], index) => (
+              <tr key={index}>
+                <td className="py-2 px-4 border-r border-b">{key}</td>
+                <td className="py-2 px-4 border-b">{value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="text-gray-500">No information available</p>
+      )}
+      
             </div>
-          ) : null}
+          )}
+        </div>
+      )}
+      {files_saved.length != 0 ? (
+        <div className="flex flex-row h-10 w-[90%]  ">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className=" ml-3  top-1
+                           flex items-center justify-center w-10 h-10 rounded-full 
+                           z-50 bg-gray-400 hover:bg-gray-600 transition duration-200 "
+          >
+            <FaFileAlt size={20} />
+          </button>
+
+          {isOpen && (
+            <div
+            className={`absolute ${state_allinfo ? 'top-24' : 'top-1'} left-16 border border-gray-300 rounded-md bg-white shadow-md p-3 w-40 z-50`}
+            >
+              <div className="flex justify-between items-center mb-2">
+                <strong className="text-sm">Saved Files</strong>
+                <FaTimes
+                  className="cursor-pointer text-gray-500 hover:text-gray-700"
+                  onClick={() => setIsOpen(false)}
+                />
+              </div>
+              <ul className="list-none p-0 m-0 text-sm max-h-52 overflow-y-auto ">
+                {files_saved.map((file, index) => (
+                  <li
+                    key={index}
+                    className="py-1 border-b last:border-b-0 text-gray-700"
+                  >
+                    {file.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      ) : null}
+
+</div>
+            
+      
 
           <div className="flex w-[100%] h-[15%] border-b-[1px] border-[#959191] py-[60px]">
             <VerifyStatus
@@ -1270,50 +1462,11 @@ const VerifyResults = ({
             />
           </div>
 
-          <div className="flex w-[100%] h-[15%] py-[60px] lg:py-[90px] justify-center items-center">
+          <div className="flex w-[100%] h-[15%] py-[62px] lg:py-[90px] justify-center items-center">
             <div className="w-[300px] h-9 bg-[#2B333E] text-center font-[500] text-[18px] text-white items-center">
               Documents Required
             </div>
           </div>
-
-          {/* { files_saved.length!=0?
-                                (
-                                  <div className='absolute h-20 w-screen'>
-                                  <button 
-                                    onClick={() => setIsOpen(!isOpen)} 
-                                    className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-400 transition duration-200 -ml-24 "
-                                  >
-                                    <FaFileAlt size={20} />
-                                  </button>
-                            
-                                  {isOpen && (
-                                    <div 
-                                      className="absolute -ml-[50px] top-1 border border-gray-300 rounded-md bg-white shadow-md p-3 w-40 "
-                    
-                                    >
-                                      <div className="flex justify-between items-center mb-2">
-                                        <strong className="text-sm">Saved Files</strong>
-                                        <FaTimes 
-                                          className="cursor-pointer text-gray-500 hover:text-gray-700" 
-                                          onClick={() => setIsOpen(false)} 
-                                        />
-                                      </div>
-                                      <ul className="list-none p-0 m-0 text-sm max-h-52 overflow-y-auto">
-                                        {files_saved.map((file, index) => (
-                                          <li key={index} className="py-1 border-b last:border-b-0 text-gray-700">
-                                            {file.name}
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  )}
-                                </div>
-                                )
-                                :
-                                null
-                                   
-                          } */}
-
           <div className="w-full flex flex-grow flex-col justify-center items-center  lg:h-1/4 ">
             <div className="flex flex-col justify-center items-center w-full max-w-[90%] lg:max-w-[80%] h-[550px] lg:h-[400px] rounded-[12px] bg-white shadow-none mt-4  lg:-mt-20">
               <div className="mb-5 h-4 overflow-hidden rounded-full bg-slate-300  w-96">

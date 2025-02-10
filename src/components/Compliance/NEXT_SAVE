@@ -169,12 +169,12 @@ const NewUpload = ({ setIsCompResult, setApiResponseData, setToken, setIsLoggedI
     }
   };
 
-  const apiUrlAllUpload = `https://192.168.18.251:8010/upload_All_LC_MAIN_DOCS`;
-  const apiSupportingFile = `https://192.168.18.251:8010/upload_All_LC_SUPPORTING_DOCS`; 
+  const apiUrlAllUpload = `https://192.168.18.251:8003/upload_All_LC_MAIN_DOCS`;
+  const apiSupportingFile = `https://192.168.18.251:8003/upload_All_LC_SUPPORTING_DOCS`; 
    const isCall = async () => {
     try {
       console.log("entered the init")
-       const iscall = 'https://192.168.18.251:8010/initLC/';
+       const iscall = 'https://192.168.18.251:8003/initLC/';
 
        const response = await fetch(`${iscall}`, {
         method: 'POST',

@@ -46,7 +46,7 @@ const NewUpload = ({
   const fetchDocuments = async () => {
     try {
       const response = await axios.post(
-        "https://192.168.18.251:8010/GetRequiredDocumentsJson_Filed_46A/"
+        "https://192.168.18.251:8003/GetRequiredDocumentsJson_Filed_46A/"
       );
       if (response.status === 200) {
         const data = response.data;
@@ -98,7 +98,7 @@ const NewUpload = ({
             // await new Promise(resolve => setTimeout(resolve, 500));
 
             response = await fetch(
-              "https://192.168.18.251:8010/RequiredDocumentsVerificationResult/",
+              "https://192.168.18.251:8003/RequiredDocumentsVerificationResult/",
               {
                 method: "POST",
                 headers: {

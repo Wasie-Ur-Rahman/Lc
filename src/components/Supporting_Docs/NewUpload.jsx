@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../UserContext/UserContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaFileAlt, FaTimes } from "react-icons/fa";
+import { FaFileAlt, FaTimes , FaInfoCircle } from "react-icons/fa";
 const NewUpload = ({
   setIsCompResult,
   setApiResponseData,
@@ -45,9 +45,12 @@ const NewUpload = ({
     api_called,
     setApiCalled,
     files_saved,
+    save_allinfo , setSave_allinfo , state_allinfo , setState_allinfo
   } = useContext(UserContext);
   console.log("token", token);
   console.log("Checking the Skip flag ", skip);
+  console.log("Checking the Save all iNFO " , save_allinfo)
+  console.log("Checking the Sates " , state_allinfo)
   const [isOpen, setIsOpen] = useState(false);
   // useEffect(() => {
   // setSkip(false)
@@ -55,7 +58,50 @@ const NewUpload = ({
   // }, []);
 
   useEffect(() => {
+      
+      const fetchLcInfo = async () => {
+        try {
+          const response = await fetch('https://192.168.18.251:8003/get_ALL_LC_INFO/', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+            },
+          });
+        
+  
+          const data = await response.json(); 
+          console.log("response from the all lc info api", data);
+  
+       
+          if (data.ALL_LC_INFO === "\"\"") {
+            console.log("Received empty ALL_LC_INFO, retrying...");
+          } else {
+          console.log("Trerminating the api" ,state_allinfo )
+          setState_allinfo(true)
+          setSave_allinfo(data);
+          console.log("The respone that is saved in the body is" , save_allinfo)
+          }
+  
+        } catch (error) {
+          console.error('Error fetching LC info:', error);
+        }
+      };
+  
+  
+      const intervalId = setInterval(() => {
+        if (!state_allinfo) { 
+          fetchLcInfo(); 
+        }
+      }, 300); 
+  
+  
+      return () => clearInterval(intervalId);
+    }, [state_allinfo]);
+  
+
+  useEffect(() => {
     const interval = setInterval(() => {
+      console.log("CHECKING THE GET ALL INFO API" , save_allinfo)
       console.log("checking");
 
       if (token === null) {
@@ -83,6 +129,7 @@ const NewUpload = ({
   const [processedDocuments, setProcessedDocuments] = useState(0);
   const [totalmatch, setTotalMatch] = useState();
   const [checking, setChecking] = useState(false);
+  const [isOpen1,setIsOpen1] = useState(false);
 
   let count = 0;
   let counter_observe = 0;
@@ -92,7 +139,7 @@ const NewUpload = ({
       try {
         console.log("Entering the Skip Region");
         const response = await axios.post(
-          "https://192.168.18.251:8010/GetRequiredDocumentsJson_Filed_46A/"
+          "https://192.168.18.251:8003/GetRequiredDocumentsJson_Filed_46A/"
         );
         console.log("Response from the updated API 46A:", response);
 
@@ -151,7 +198,7 @@ const NewUpload = ({
             await new Promise((resolve) => setTimeout(resolve, 500));
 
             response = await fetch(
-              "https://192.168.18.251:8010/RequiredDocumentsVerificationResult/",
+              "https://192.168.18.251:8003/RequiredDocumentsVerificationResult/",
               {
                 method: "POST",
                 headers: {
@@ -364,6 +411,54 @@ const NewUpload = ({
 
   return (
     <div className="w-screen h-screen">
+
+<div className="flex flex-col space-y-16 absolute w-[40%] h-full">
+           {state_allinfo && (
+      <div className="flex flex-row h-10 w-[96%]  ">
+          <button
+            onClick={() => setIsOpen1(!isOpen1)}
+            className="ml-3  top-1
+                           flex items-center justify-center w-10 h-10 rounded-full 
+                           z-50 bg-gray-400 hover:bg-gray-600 transition duration-200"
+          >
+            <FaInfoCircle size={20} />
+          </button>
+      
+          {isOpen1 && (
+            <div className="absolute  top-1 left-16
+                             border border-gray-300 rounded-md bg-white shadow-md p-3 z-50 h-[96%]  overflow-auto w-full ">
+              <div className="flex justify-between items-center mb-2">
+                <strong className="text-sm">Lc Info</strong>
+                <FaTimes
+                  className="cursor-pointer text-gray-500 hover:text-gray-700"
+                  onClick={() => setIsOpen1(false)}
+                />
+              </div>
+              {save_allinfo.ALL_LC_INFO ? (
+        <table className="min-w-full table-auto border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-gray-500">
+              <th className="py-2 px-4 border-r border-b text-left">Key</th>
+              <th className="py-2 px-4 border-b text-left">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(save_allinfo.ALL_LC_INFO).map(([key, value], index) => (
+              <tr key={index}>
+                <td className="py-2 px-4 border-r border-b">{key}</td>
+                <td className="py-2 px-4 border-b">{value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="text-gray-500">No information available</p>
+      )}
+      
+            </div>
+          )}
+        </div>
+      )}
       {files_saved.length != 0 ? (
         <div className="flex flex-row h-10 w-[90%]  ">
           <button
@@ -377,8 +472,8 @@ const NewUpload = ({
 
           {isOpen && (
             <div
-              className="absolute  top-1 left-16
-                             border border-gray-300 rounded-md bg-white shadow-md p-3 w-40 z-50"
+            className={`absolute ${state_allinfo ? 'top-28' : 'top-1'} left-16 border border-gray-300 rounded-md bg-white shadow-md p-3 w-40 z-50`}
+
             >
               <div className="flex justify-between items-center mb-2">
                 <strong className="text-sm">Saved Files</strong>
@@ -387,7 +482,7 @@ const NewUpload = ({
                   onClick={() => setIsOpen(false)}
                 />
               </div>
-              <ul className="list-none p-0 m-0 text-sm max-h-52 overflow-y-auto">
+              <ul className="list-none p-0 m-0 text-sm max-h-52 overflow-y-auto ">
                 {files_saved.map((file, index) => (
                   <li
                     key={index}
@@ -402,6 +497,7 @@ const NewUpload = ({
         </div>
       ) : null}
 
+</div>
       {loading ? (
         <div
           className={`flex flex-col justify-center items-center w-[100%] h-[70%]  rounded-[12px] bg-white shadow-none  lg:mt-0`}

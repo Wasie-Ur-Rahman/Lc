@@ -61,7 +61,7 @@ const NewUpload = ({ setIsCompResult, setApiResponseData, setToken, setIsLoggedI
    {
     try {
       console.log("Entering the Skip Region")
-      const response = await axios.post('https://192.168.18.251:8010/GetRequiredDocumentsJson_Filed_46A/');
+      const response = await axios.post('https://192.168.18.251:8003/GetRequiredDocumentsJson_Filed_46A/');
       console.log("Response from the updated API 46A:", response);
 
       if (response.status === 200) {
@@ -129,7 +129,7 @@ useEffect(() => {
             console.log("Polling for verification results...");
             await new Promise(resolve => setTimeout(resolve, 500));
       
-            response = await fetch('https://192.168.18.251:8010/RequiredDocumentsVerificationResult/', {
+            response = await fetch('https://192.168.18.251:8003/RequiredDocumentsVerificationResult/', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',

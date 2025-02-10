@@ -25,6 +25,9 @@ const NewUpload = ({
     setActiveFlag_1,
     files_saved,
     setFilesSaved,
+    setState_allinfo,
+    setSave_allinfo,
+    save_allinfo , state_allinfo 
 
     // verification , setVerification
   } = useContext(UserContext);
@@ -33,8 +36,12 @@ const NewUpload = ({
   const [disable_buttons, setDisable_buttons] = useState(false);
   const [isProceedDisabled, setIsProceedDisabled] = useState(false);
   const [hideSupportingButtons, setHideSupportingButtons] = useState(false);
+  
+  console.log("Checking the Sate all info" , state_allinfo)
+  console.log("Checking the save all info", save_allinfo)
 
   const handleUploadAll = async () => {
+    
     if (selectedFiles.length === 0 && selectedFiles1.length === 0) {
       console.error("No files to upload.");
       return;
@@ -76,6 +83,7 @@ const NewUpload = ({
         console.log("Skipping uploadFiles1 as condition is met.");
         // Perform additional actions if skipping
         setIsCompResult(true);
+       
         setActiveFlag(true);
       } else {
         await uploadFiles1(selectedFiles1);
@@ -91,6 +99,8 @@ const NewUpload = ({
   };
 
   useEffect(() => {
+    setState_allinfo(false)
+    setSave_allinfo({})
     setFlagsetter(false);
     // setVerification(false)
     console.log("Setting the flag false for upload");
@@ -287,12 +297,12 @@ const NewUpload = ({
     }
   };
 
-  const apiUrlAllUpload = `https://192.168.18.251:8010/upload_All_LC_MAIN_DOCS`;
-  const apiSupportingFile = `https://192.168.18.251:8010/upload_All_LC_SUPPORTING_DOCS`;
+  const apiUrlAllUpload = `https://192.168.18.251:8003/upload_All_LC_MAIN_DOCS`;
+  const apiSupportingFile = `https://192.168.18.251:8003/upload_All_LC_SUPPORTING_DOCS`;
   const isCall = async () => {
     try {
       console.log("entered the init");
-      const iscall = "https://192.168.18.251:8010/initLC/";
+      const iscall = "https://192.168.18.251:8003/initLC/";
 
       const response = await fetch(`${iscall}`, {
         method: "POST",
@@ -310,7 +320,7 @@ const NewUpload = ({
   };
 
   const Check = async () => {
-    const url = "https://192.168.18.251:8010/initalizedCheck/";
+    const url = "https://192.168.18.251:8003/initalizedCheck/";
 
     try {
       const response = await fetch(url, {

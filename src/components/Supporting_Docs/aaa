@@ -105,7 +105,7 @@ const VerifyResults = ({ apiResponseData , documentsi  , flag1  , setIsLoggedIn 
     
     // const fetchDocuments = async () => {
     //     try {
-    //         const response = await axios.post('https://192.168.18.251:8010/GetRequiredDocumentsJson_Filed_46A/');
+    //         const response = await axios.post('https://192.168.18.251:8003/GetRequiredDocumentsJson_Filed_46A/');
     //         if (response.status === 200) {
     //             const data = response.data;
     //             if (data.points && Array.isArray(data.points)) {
@@ -201,7 +201,7 @@ const VerifyResults = ({ apiResponseData , documentsi  , flag1  , setIsLoggedIn 
     const handleButtonClick = async (fileName, rowIndex, buttonIndex) => {
         try {
                       setPDFFlag(true);
-                      const response = await axios.post('https://192.168.18.251:8010/get_requiredFile/', {
+                      const response = await axios.post('https://192.168.18.251:8003/get_requiredFile/', {
                         filename: fileName
                     }, {
                         responseType: 'blob' // to handle the response as a Blob
@@ -233,7 +233,7 @@ const VerifyResults = ({ apiResponseData , documentsi  , flag1  , setIsLoggedIn 
     const handleButtonClick1 = async (fileName) => {
       try {
         setPDFFlag1(true);
-        const response = await axios.post('https://192.168.18.251:8010/get_requiredFile/', {
+        const response = await axios.post('https://192.168.18.251:8003/get_requiredFile/', {
             filename: fileName
         }, {
             responseType: 'blob' // to handle the response as a Blob
@@ -271,7 +271,7 @@ const handleProceedClick1 = async () => {
            setFinalPage1(true);
         console.log("Payloader " , payload_setter)
     
-        const response = await axios.post('https://192.168.18.251:8010/proceedToReportGeneration/', payload_setter, {
+        const response = await axios.post('https://192.168.18.251:8003/proceedToReportGeneration/', payload_setter, {
             headers: {
                 'Authorization': `Bearer ${token}`, 
                 'Content-Type': 'application/json'
@@ -319,7 +319,7 @@ const handleProceedClick_pdf = async () => {
         setFinalPage1(true);
 
         const response = await axios.post(
-            'https://192.168.18.251:8010/proceedToReportGeneration_NoAditionalDocs/',
+            'https://192.168.18.251:8003/proceedToReportGeneration_NoAditionalDocs/',
             {},
             {
                 headers: {
@@ -384,7 +384,7 @@ const handleProceedClick2 = async (payload1) => {
   
   // To ensure you're using the correct payload in the API call, use payload1 directly
   try {
-      const response = await axios.post('https://192.168.18.251:8010/store_documents/', payload1, {
+      const response = await axios.post('https://192.168.18.251:8003/store_documents/', payload1, {
           headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
@@ -419,7 +419,7 @@ const handleProceedClick2 = async (payload1) => {
       
       // To ensure you're using the correct payload in the API call, use payload1 directly
       try {
-          const response = await axios.post('https://192.168.18.251:8010/store_documents/', payload1, {
+          const response = await axios.post('https://192.168.18.251:8003/store_documents/', payload1, {
               headers: {
                   'Authorization': `Bearer ${token}`,
                   'Content-Type': 'application/json'
@@ -517,7 +517,7 @@ const handleProceedClick2 = async (payload1) => {
     while (!hasCheckedOnce) {
         try {
             // Call the first verification API
-            const response = await axios.post('https://192.168.18.251:8010/DocumentsDetailedVerification/', {
+            const response = await axios.post('https://192.168.18.251:8003/DocumentsDetailedVerification/', {
                 timeout: 300000, // Set timeout to 5 minutes
             });
 
@@ -550,7 +550,7 @@ const handleProceedClick2 = async (payload1) => {
     while (!hasCheckedOnce) {
         try {
             // Call the first verification API
-            const response = await axios.post('https://192.168.18.251:8010/DocumentsDetailedVerification/', {
+            const response = await axios.post('https://192.168.18.251:8003/DocumentsDetailedVerification/', {
                 timeout: 300000, // Set timeout to 5 minutes
             });
 
@@ -583,7 +583,7 @@ const fetchDetailedVerificationResult = async () => {
       let taker;
   
       while (true) {
-        const response = await axios.post('https://192.168.18.251:8010/DetailedVerificationResult/', {
+        const response = await axios.post('https://192.168.18.251:8003/DetailedVerificationResult/', {
           timeout: 300000,
         });
   

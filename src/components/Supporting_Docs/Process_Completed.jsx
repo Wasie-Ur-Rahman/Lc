@@ -16,7 +16,7 @@ const Process_Completed = ({ Payloader }) => {
       console.log("Payloader ", Payloader);
 
       const response = await axios.post(
-        "https://192.168.18.251:8003/proceedToReportGeneration/",
+        "http://127.0.0.1:8003/proceedToReportGeneration/",
         Payloader,
         {
           headers: {
@@ -53,7 +53,7 @@ const Process_Completed = ({ Payloader }) => {
       setFlag(true);
 
       const response = await axios.post(
-        "https://192.168.18.251:8003/proceedToReportGeneration_NoAditionalDocs/",
+        "http://127.0.0.1:8003/proceedToReportGeneration_NoAditionalDocs/",
         {},
         {
           headers: {

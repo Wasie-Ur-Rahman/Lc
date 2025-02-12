@@ -125,7 +125,7 @@ const VerifyResults = ({
 
   // const fetchDocuments = async () => {
   //     try {
-  //         const response = await axios.post('https://192.168.18.251:8003/GetRequiredDocumentsJson_Filed_46A/');
+  //         const response = await axios.post('http://127.0.0.1:8003/GetRequiredDocumentsJson_Filed_46A/');
   //         if (response.status === 200) {
   //             const data = response.data;
   //             if (data.points && Array.isArray(data.points)) {
@@ -149,7 +149,7 @@ const VerifyResults = ({
         
         const fetchLcInfo = async () => {
           try {
-            const response = await fetch('https://192.168.18.251:8003/get_ALL_LC_INFO/', {
+            const response = await fetch('http://127.0.0.1:8003/get_ALL_LC_INFO/', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
@@ -258,7 +258,7 @@ const VerifyResults = ({
     try {
       setPDFFlag(true);
       const response = await axios.post(
-        "https://192.168.18.251:8003/get_requiredFile/",
+        "http://127.0.0.1:8003/get_requiredFile/",
         {
           filename: fileName,
         },
@@ -295,7 +295,7 @@ const VerifyResults = ({
       setPDFFlag1(true);
       const lowerCaseFileName = fileName.replace(/\.PDF$/, ".pdf");
       const response = await axios.post(
-        "https://192.168.18.251:8003/get_requiredFile/",
+        "http://127.0.0.1:8003/get_requiredFile/",
         {
           filename: lowerCaseFileName,
         },
@@ -321,7 +321,7 @@ const VerifyResults = ({
       setPdfUrl1(fileUrl);
     } catch (error) {
       console.error("Error fetching or downloading the PDF file:", error);
-      console.error("https://192.168.18.251:8003/get_requiredFile/" + fileName);
+      console.error("http://127.0.0.1:8003/get_requiredFile/" + fileName);
     } finally {
       setPDFFlag1(false);
     }
@@ -334,7 +334,7 @@ const VerifyResults = ({
       console.log("Payloader ", payload_setter);
 
       const response = await axios.post(
-        "https://192.168.18.251:8003/proceedToReportGeneration/",
+        "http://127.0.0.1:8003/proceedToReportGeneration/",
         payload_setter,
         {
           headers: {
@@ -374,7 +374,7 @@ const VerifyResults = ({
       setFinalPage1(true);
 
       const response = await axios.post(
-        "https://192.168.18.251:8003/proceedToReportGeneration_NoAditionalDocs/",
+        "http://127.0.0.1:8003/proceedToReportGeneration_NoAditionalDocs/",
         {},
         {
           headers: {
@@ -431,7 +431,7 @@ const VerifyResults = ({
     // To ensure you're using the correct payload in the API call, use payload1 directly
     try {
       const response = await axios.post(
-        "https://192.168.18.251:8003/store_documents/",
+        "http://127.0.0.1:8003/store_documents/",
         payload1,
         {
           headers: {
@@ -465,7 +465,7 @@ const VerifyResults = ({
     // To ensure you're using the correct payload in the API call, use payload1 directly
     try {
       const response = await axios.post(
-        "https://192.168.18.251:8003/store_documents/",
+        "http://127.0.0.1:8003/store_documents/",
         payload1,
         {
           headers: {
@@ -557,7 +557,7 @@ const VerifyResults = ({
       try {
         // Call the first verification API
         const response = await axios.post(
-          "https://192.168.18.251:8003/DocumentsDetailedVerification/",
+          "http://127.0.0.1:8003/DocumentsDetailedVerification/",
           {
             timeout: 300000, // Set timeout to 5 minutes
           }
@@ -594,7 +594,7 @@ const VerifyResults = ({
       try {
         // Call the first verification API
         const response = await axios.post(
-          "https://192.168.18.251:8003/DocumentsDetailedVerification/",
+          "http://127.0.0.1:8003/DocumentsDetailedVerification/",
           {
             timeout: 300000, // Set timeout to 5 minutes
           }
@@ -633,7 +633,7 @@ const VerifyResults = ({
 
       while (true) {
         const response = await axios.post(
-          "https://192.168.18.251:8003/DetailedVerificationResult/",
+          "http://127.0.0.1:8003/DetailedVerificationResult/",
           {
             timeout: 300000,
           }

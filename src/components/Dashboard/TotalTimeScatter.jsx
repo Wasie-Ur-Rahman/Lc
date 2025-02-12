@@ -35,7 +35,7 @@ const TotalTimeScatter = () => {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "https://192.168.18.251:8003/Stats_getLC_Total_Time_Seconds/"
+          "http://127.0.0.1:8003/Stats_getLC_Total_Time_Seconds/"
         );
         console.log("API Data:", response.data);
         const scatterData = processScatterData(response.data);

@@ -73,7 +73,7 @@ const VerifyResults = ({ apiResponseData , documentsi }) =>
     const [flag , setFlag] = useState(false)
     // const fetchDocuments = async () => {
     //     try {
-    //         const response = await axios.post('https://192.168.18.251:8003/GetRequiredDocumentsJson_Filed_46A/');
+    //         const response = await axios.post('http://127.0.0.1:8003/GetRequiredDocumentsJson_Filed_46A/');
     //         if (response.status === 200) {
     //             const data = response.data;
     //             if (data.points && Array.isArray(data.points)) {
@@ -171,7 +171,7 @@ const VerifyResults = ({ apiResponseData , documentsi }) =>
     const handleButtonClick = async (fileName, rowIndex, buttonIndex) => {
         try {
                       setPDFFlag(true);
-                      const response = await axios.post('https://192.168.18.251:8003/get_requiredFile/', {
+                      const response = await axios.post('http://127.0.0.1:8003/get_requiredFile/', {
                         filename: fileName
                     }, {
                         responseType: 'blob' // to handle the response as a Blob
@@ -200,7 +200,7 @@ const VerifyResults = ({ apiResponseData , documentsi }) =>
     const handleButtonClick1 = async (fileName) => {
       try {
         setPDFFlag1(true);
-        const response = await axios.post('https://192.168.18.251:8003/get_requiredFile/', {
+        const response = await axios.post('http://127.0.0.1:8003/get_requiredFile/', {
             filename: fileName
         }, {
             responseType: 'blob' // to handle the response as a Blob
@@ -238,7 +238,7 @@ const handleProceedClick1 = async () => {
            setFinalPage1(true);
         console.log("Payloader " , Payloader)
     
-        const response = await axios.post('https://192.168.18.251:8003/proceedToReportGeneration/', Payloader, {
+        const response = await axios.post('http://127.0.0.1:8003/proceedToReportGeneration/', Payloader, {
             headers: {
                 'Authorization': `Bearer ${token}`, 
                 'Content-Type': 'application/json'
@@ -320,7 +320,7 @@ useEffect(() => {
       
       // To ensure you're using the correct payload in the API call, use payload1 directly
       try {
-          const response = await axios.post('https://192.168.18.251:8003/store_documents/', payload1, {
+          const response = await axios.post('http://127.0.0.1:8003/store_documents/', payload1, {
               headers: {
                   'Authorization': `Bearer ${token}`,
                   'Content-Type': 'application/json'
@@ -356,7 +356,7 @@ useEffect(() => {
     while (!hasCheckedOnce) {
         try {
             // Call the first verification API
-            const response = await axios.post('https://192.168.18.251:8003/DocumentsDetailedVerification/', {
+            const response = await axios.post('http://127.0.0.1:8003/DocumentsDetailedVerification/', {
                 timeout: 300000, // Set timeout to 5 minutes
             });
 
@@ -389,7 +389,7 @@ const fetchDetailedVerificationResult = async () => {
     let taker ;
       while (true) {
         // Call the second API for detailed verification result
-        const response = await axios.post('https://192.168.18.251:8003/DetailedVerificationResult/', {
+        const response = await axios.post('http://127.0.0.1:8003/DetailedVerificationResult/', {
           timeout: 300000, // Set timeout to 5 minutes
         });
 

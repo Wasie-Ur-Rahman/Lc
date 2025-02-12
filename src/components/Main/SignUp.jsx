@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-const check = "https://192.168.18.251:8003/api/user/is_available/";
+const check = "http://127.0.0.1:8003/api/user/is_available/";
 
 const registerUser = async (userData) => {
-  const url = "https://192.168.18.251:8003/api/users/user-registeration";
+  const url = "http://127.0.0.1:8003/api/users/user-registeration";
 
   try {
     const response = await axios.post(url, userData, {

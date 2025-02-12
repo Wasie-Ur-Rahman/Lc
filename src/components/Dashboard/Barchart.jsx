@@ -34,7 +34,7 @@ const LCStatusChartReplica = () => {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "https://192.168.18.251:8003/getLastProcessedLC/"
+          "http://127.0.0.1:8003/getLastProcessedLC/"
         );
         const complianceData = processComplianceData(response.data);
         setChartData(complianceData);

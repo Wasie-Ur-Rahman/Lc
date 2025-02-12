@@ -14,7 +14,7 @@ const DonutChart = () => {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "https://192.168.18.251:8003/Stats_getLC_FC_RATIO/"
+          "http://127.0.0.1:8003/Stats_getLC_FC_RATIO/"
         );
         setChartData(response.data);
       } catch (error) {

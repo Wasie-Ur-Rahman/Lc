@@ -61,7 +61,7 @@ const NewUpload = ({
       
       const fetchLcInfo = async () => {
         try {
-          const response = await fetch('https://192.168.18.251:8003/get_ALL_LC_INFO/', {
+          const response = await fetch('http://127.0.0.1:8003/get_ALL_LC_INFO/', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
@@ -139,7 +139,7 @@ const NewUpload = ({
       try {
         console.log("Entering the Skip Region");
         const response = await axios.post(
-          "https://192.168.18.251:8003/GetRequiredDocumentsJson_Filed_46A/"
+          "http://127.0.0.1:8003/GetRequiredDocumentsJson_Filed_46A/"
         );
         console.log("Response from the updated API 46A:", response);
 
@@ -198,7 +198,7 @@ const NewUpload = ({
             await new Promise((resolve) => setTimeout(resolve, 500));
 
             response = await fetch(
-              "https://192.168.18.251:8003/RequiredDocumentsVerificationResult/",
+              "http://127.0.0.1:8003/RequiredDocumentsVerificationResult/",
               {
                 method: "POST",
                 headers: {

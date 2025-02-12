@@ -33,7 +33,7 @@ const DailyLc = () => {
     const fetchData = async () => {
       try {
         const response = await axios.post(
-          "https://192.168.18.251:8003/GetDailyLcCount/"
+          "http://127.0.0.1:8003/GetDailyLcCount/"
         );
         console.log("Response from the api", response.data);
         const complianceData = processComplianceData(response.data);

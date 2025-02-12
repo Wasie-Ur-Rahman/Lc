@@ -19,7 +19,7 @@ const LoginPage = ({
   const isCall = async () => {
     try {
       console.log("entered the init");
-      const iscall = "https://192.168.18.251:8003/initLC/";
+      const iscall = "http://127.0.0.1:8003/initLC/";
 
       const response = await fetch(`${iscall}`, {
         method: "POST",

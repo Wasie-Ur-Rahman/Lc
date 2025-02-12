@@ -75,7 +75,7 @@ const CompResults = ({
     
     const fetchLcInfo = async () => {
       try {
-        const response = await fetch('https://192.168.18.251:8003/get_ALL_LC_INFO/', {
+        const response = await fetch('http://127.0.0.1:8003/get_ALL_LC_INFO/', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -172,7 +172,7 @@ const CompResults = ({
   const isCall = async () => {
     try {
       console.log("entered the init");
-      const iscall = "https://192.168.18.251:8003/initLC/";
+      const iscall = "http://127.0.0.1:8003/initLC/";
 
       const response = await fetch(`${iscall}`, {
         method: "POST",
@@ -210,7 +210,7 @@ const CompResults = ({
   };
 
   const Check = async () => {
-    const url = "https://192.168.18.251:8003/initalizedCheck/";
+    const url = "http://127.0.0.1:8003/initalizedCheck/";
 
     try {
       const response = await fetch(url, {

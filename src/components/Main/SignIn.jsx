@@ -55,12 +55,12 @@ const SignIn = ({
   const [isWaiting, setIsWaiting] = useState(false);
 
   const apiUrl =
-    "https://192.168.18.251:8003/api/authenticate/access-token-json";
+    "http://127.0.0.1:8003/api/authenticate/access-token-json";
 
   const isCall = async (accessToken) => {
     try {
       console.log("Entered the initLC function");
-      const iscall = "https://192.168.18.251:8003/initLC/";
+      const iscall = "http://127.0.0.1:8003/initLC/";
 
       const response = await fetch(`${iscall}`, {
         method: "POST",
@@ -83,7 +83,7 @@ const SignIn = ({
   };
 
   const Check = async () => {
-    const url = "https://192.168.18.251:8003/initalizedCheck/";
+    const url = "http://127.0.0.1:8003/initalizedCheck/";
 
     try {
       const response = await fetch(url, {

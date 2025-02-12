@@ -81,7 +81,7 @@ const NewUpload = ({ setIsCompResult, setApiResponseData , setToken , setIsLogge
     }
   };
 
-  const apiUrlAllUpload = `https://192.168.18.251:8003/upload_All_LC_Files`;
+  const apiUrlAllUpload = `http://127.0.0.1:8003/upload_All_LC_Files`;
 
   const uploadFiles = async (files) => {
     const formData = new FormData();
@@ -298,7 +298,7 @@ import React, { useState , useEffect } from 'react';
 //     }
 //   };
 
-//   const apiUrlAllUpload = `https://192.168.18.251:8003/upload_All_LC_Files`;
+//   const apiUrlAllUpload = `http://127.0.0.1:8003/upload_All_LC_Files`;
 
 //   const uploadFiles = async (files) => {
 //     const formData = new FormData();

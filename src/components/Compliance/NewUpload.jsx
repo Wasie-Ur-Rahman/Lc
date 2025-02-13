@@ -99,8 +99,8 @@ const NewUpload = ({
   };
 
   useEffect(() => {
-    setState_allinfo(false)
-    setSave_allinfo({})
+    // setState_allinfo(false)
+    // setSave_allinfo({})
     setFlagsetter(false);
     // setVerification(false)
     console.log("Setting the flag false for upload");

@@ -147,6 +147,8 @@ const VerifyResults = ({
 
   useEffect(() => {
         
+
+        console.log("State changes" , state_allinfo)
         const fetchLcInfo = async () => {
           try {
             const response = await fetch('http://127.0.0.1:8003/get_ALL_LC_INFO/', {
@@ -501,12 +503,12 @@ const VerifyResults = ({
       setSupportFlag(true);
       console.log("Documents", documents);
       documents.forEach((doc) => {
-        const documentNumber = String(doc.Number); // Convert document number to a string
+        const documentNumber = String(doc.Number); 
 
-        // Get added files for the current document row
+
         const addedFilesForRow = addedFiles[documentNumber] || [];
 
-        // Get filtered files for the current document row
+
         const filteredFilesForRow = filteredEntries
           .filter(
             ([filteredKey, filteredValue]) =>
@@ -514,13 +516,13 @@ const VerifyResults = ({
           )
           .map(([filteredKey]) => filteredKey);
 
-        // Combine added and filtered files
+    
         const allFilesForRow = [...addedFilesForRow, ...filteredFilesForRow];
 
-        // If there are any files for the row, construct the payload
+       
         if (allFilesForRow.length > 0) {
           allFilesForRow.forEach((fileName) => {
-            // Set the payload with the document name (including extension) and document number as a string
+        
             payload1[fileName] = documentNumber;
           });
         }
@@ -565,10 +567,10 @@ const VerifyResults = ({
 
         if (response.data.message === "OK") {
           console.log("Verification completed successfully");
-          hasCheckedOnce = true; // Mark that the second API should be called only once
+          hasCheckedOnce = true; 
 
-          // Call the second API after waiting for 10 seconds
-          await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait 10 seconds
+        
+          await new Promise((resolve) => setTimeout(resolve, 10000)); 
         } else {
           console.log(
             "Verification still pending or other status:",
@@ -841,55 +843,7 @@ const VerifyResults = ({
         ) : !finalPage && !FinalPage1 && skip ? (
           <div className="flex flex-col absolute w-[92%] h-[100%] ">
             <div className="flex w-[100%] h-[15%] border-b-[1px] border-[#959191] py-[60px]">
-            <div className="flex flex-col  absolute w-[40%] h-full -mt-14  ">
-{state_allinfo && (
-                <div className="inline-block absolute Laptops:ml-14 h-full w-full  Laptops_L:ml-12 -ml-[70px] ">
-                    <button
-                      onClick={() => setIsOpen1(!isOpen1)}
-                      className="top-1
-                                     flex items-center justify-center w-10 h-10 rounded-full 
-                                     z-50 bg-gray-400 hover:bg-gray-600 transition duration-200"
-                    >
-                      <FaInfoCircle size={20} />
-                    </button>
-                
-                    {isOpen1 && (
-                      <div className="absolute  top-1 left-16
-                                       border border-gray-300 rounded-md bg-white shadow-md p-3 z-50 h-[96%]  overflow-auto w-full ">
-                        <div className="flex justify-between items-center mb-2">
-                          <strong className="text-sm">Lc Info</strong>
-                          <FaTimes
-                            className="cursor-pointer text-gray-500 hover:text-gray-700"
-                            onClick={() => setIsOpen1(false)}
-                          />
-                        </div>
-                        {save_allinfo.ALL_LC_INFO ? (
-                  <table className="min-w-full table-auto border-collapse border border-gray-300">
-                    <thead>
-                      <tr className="bg-gray-500">
-                        <th className="py-2 px-4 border-r border-b text-left">Key</th>
-                        <th className="py-2 px-4 border-b text-left">Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(save_allinfo.ALL_LC_INFO).map(([key, value], index) => (
-                        <tr key={index}>
-                          <td className="py-2 px-4 border-r border-b">{key}</td>
-                          <td className="py-2 px-4 border-b">{value}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <p className="text-gray-500">No information available</p>
-                )}
-                
-                      </div>
-                    )}
-                  </div>
-                )}
-
-</div>
+           
               <VerifyStatus
                 uploaded={true}
                 verified={true}
@@ -899,6 +853,127 @@ const VerifyResults = ({
                 ThirdName={"Process Completed"}
               />
             </div>
+
+              <div className="  flex flex-row justify-center items-center space-x-20 h-20 w-full  border-b-[1px]    border-[#959191] "
+                   >
+                     {state_allinfo ? (
+                <div className="">
+                <div className="relative group ml-10">
+                  
+                  <div className="flex flex-row items-center justify-center gap-2 font-bold">
+                    INFO
+                  <button 
+                  onClick={() => {setIsOpen1(!isOpen1) ; setIsOpen(false)}}
+                 
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-400 hover:bg-gray-600 transition duration-200"
+                > 
+                  <FaInfoCircle size={22}  />
+                  
+                </button>
+                    </div>
+               
+              
+           
+              </div>
+              
+              {isOpen1 && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+              
+                  <div className="bg-white w-[90%] h-[90%] rounded-lg shadow-lg p-5 relative overflow-hidden">
+                    
+                  
+                    <button 
+                      className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+                      onClick={() => setIsOpen1(false)}
+                    >
+                      <FaTimes size={24} />
+                    </button>
+              
+               
+                    <div className="text-xl font-bold mb-4 text-center">LC INFO</div>
+              
+                 
+                    <div className="overflow-auto h-[96%] border border-gray-300 rounded-lg">
+                      {save_allinfo.ALL_LC_INFO ? (
+                        <table className="w-full table-auto border-collapse border border-gray-300">
+                          <thead className="bg-[#2B333E] text-white">
+                            <tr>
+                              <th className="py-2 px-4 border-r border-b text-left">Key</th>
+                              <th className="py-2 px-4 border-b text-left">Value</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {Object.entries(save_allinfo.ALL_LC_INFO).map(([key, value], index) => (
+                              <tr key={index} className="hover:bg-gray-100">
+                                <td className="py-2 px-4 border-r border-b">{key}</td>
+                                <td className="py-2 px-4 border-b">{value}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      ) : (
+                        <p className="text-gray-500 text-center">No information available</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+                </div>
+              )
+            :
+            
+            (
+              <div>   <div className={`flex flex-row items-center justify-center gap-2 font-bold ${files_saved.length !== 0 ? "" : "ml-8"}`}>
+              INFO
+            <button disabled
+            
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-red-600 transition duration-200 disabled "
+            > 
+            <FaInfoCircle size={22}  />
+            
+            </button>
+              </div></div>
+            )}
+              
+              <div className="relative group">
+              {files_saved.length != 0 ? (
+                     <div className="flex flex-row items-center justify-center gap-2 font-bold">
+                      SAVED DOCS
+                        <button
+                          onClick={() => {setIsOpen(!isOpen) ; setIsOpen1(false)}}
+                          className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-400 hover:bg-gray-600 transition duration-200 "
+                        >
+                          <FaFileAlt size={22} />
+                        </button>
+              
+              
+                        {isOpen && (
+                          <div className=" absolute  top-1 ml-80 border border-gray-300 rounded-md bg-white shadow-md p-3 w-40 z-50 transform transition ease-linear delay-1000  duration-1000 ">
+                            <div className="flex justify-between items-center mb-2">
+                              <strong className="text-sm">Saved Files</strong>
+                              <FaTimes
+                                className="cursor-pointer text-gray-500 hover:text-gray-700"
+                                onClick={() => setIsOpen(false)}
+                              />
+                            </div>
+                            <ul className="list-none p-0 m-0 text-sm max-h-52 overflow-y-auto  ">
+                              {files_saved.map((file, index) => (
+                                <li
+                                  key={index}
+                                  className="py-1 border-b last:border-b-0 text-gray-700"
+                                >
+                                  {file.name}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    ) : null}
+              </div>
+              
+                   </div>
             <div className="flex flex-col w-[100%] h-[10%] py-[50px] justify-center items-center">
               <div className="w-[300px] h-9 bg-[#2B333E] text-center font-[500] text-[20px] py-[3px]  text-white items-center">
                 Documents Verification
@@ -930,56 +1005,10 @@ const VerifyResults = ({
                   
                   "
           >
-                <div className="flex flex-col  absolute w-[40%] h-full -mt-13  ">
-{state_allinfo && (
-                <div className="inline-block absolute Laptops:-ml-10 h-full w-full  Laptops_L:-ml-10 -ml-[70px] ">
-                    <button
-                      onClick={() => setIsOpen1(!isOpen1)}
-                      className="top-1
-                                     flex items-center justify-center w-10 h-10 rounded-full 
-                                     z-50 bg-gray-400 hover:bg-gray-600 transition duration-200"
-                    >
-                      <FaInfoCircle size={20} />
-                    </button>
-                
-                    {isOpen1 && (
-                      <div className="absolute  top-1 left-16
-                                       border border-gray-300 rounded-md bg-white shadow-md p-3 z-50 h-[96%]  overflow-auto w-full ">
-                        <div className="flex justify-between items-center mb-2">
-                          <strong className="text-sm">Lc Info</strong>
-                          <FaTimes
-                            className="cursor-pointer text-gray-500 hover:text-gray-700"
-                            onClick={() => setIsOpen1(false)}
-                          />
-                        </div>
-                        {save_allinfo.ALL_LC_INFO ? (
-                  <table className="min-w-full table-auto border-collapse border border-gray-300">
-                    <thead>
-                      <tr className="bg-gray-500">
-                        <th className="py-2 px-4 border-r border-b text-left">Key</th>
-                        <th className="py-2 px-4 border-b text-left">Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(save_allinfo.ALL_LC_INFO).map(([key, value], index) => (
-                        <tr key={index}>
-                          <td className="py-2 px-4 border-r border-b">{key}</td>
-                          <td className="py-2 px-4 border-b">{value}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <p className="text-gray-500">No information available</p>
-                )}
-                
-                      </div>
-                    )}
-                  </div>
-                )}
+        
+            <div className="flex w-[100%] my-2 justify-center items-center border-b-[1px]  border-[#959191] py-3 ">
 
-</div>
-            <div className="flex w-[100%] h-[15%] border-b-[1px] border-[#959191] py-[60px]">
+      
               <VerifyStatus
                 uploaded={true}
                 verified={true}
@@ -989,7 +1018,127 @@ const VerifyResults = ({
                 ThirdName={"Process Completed"}
               />
             </div>
-            <div className="flex flex-col w-[100%] h-[10%] py-[50px] justify-center items-center">
+
+ <div className="  flex flex-row justify-center items-center space-x-20  w-full   border-b-[1px]  my-2 py-2   border-[#959191] "
+      >
+        {state_allinfo ?(
+   <div className="">
+   <div className="relative group ">
+     
+     <div className="flex flex-row items-center justify-center gap-2 font-bold">
+       INFO
+     <button 
+     onClick={() => {setIsOpen1(!isOpen1) ; setIsOpen(false)}}
+    
+     className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-400 hover:bg-gray-600 transition duration-200"
+   > 
+     <FaInfoCircle size={22}  />
+     
+   </button>
+       </div>
+  
+ 
+ </div>
+ 
+ {isOpen1 && (
+   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+ 
+     <div className="bg-white w-[90%] h-[90%] rounded-lg shadow-lg p-5 relative overflow-hidden">
+       
+     
+       <button 
+         className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+         onClick={() => setIsOpen1(false)}
+       >
+         <FaTimes size={24} />
+       </button>
+ 
+  
+       <div className="text-xl font-bold mb-4 text-center">LC INFO</div>
+ 
+    
+       <div className="overflow-auto h-[96%] border border-gray-300 rounded-lg">
+         {save_allinfo.ALL_LC_INFO ? (
+           <table className="w-full table-auto border-collapse border border-gray-300">
+             <thead className="bg-[#2b333e] text-white">
+               <tr>
+                 <th className="py-2 px-4 border-r border-b text-left">Key</th>
+                 <th className="py-2 px-4 border-b text-left">Value</th>
+               </tr>
+             </thead>
+             <tbody>
+               {Object.entries(save_allinfo.ALL_LC_INFO).map(([key, value], index) => (
+                 <tr key={index} className="hover:bg-gray-100">
+                   <td className="py-2 px-4 border-r border-b">{key}</td>
+                   <td className="py-2 px-4 border-b">{value}</td>
+                 </tr>
+               ))}
+             </tbody>
+           </table>
+         ) : (
+           <p className="text-gray-500 text-center">No information available</p>
+         )}
+       </div>
+     </div>
+   </div>
+ )}
+ 
+   </div>
+ )
+:
+(
+  <div>   <div className={`flex flex-row items-center justify-center gap-2 font-bold ${files_saved.length !== 0 ? "" : "ml-8"}`}>
+  INFO
+<button disabled
+
+className="flex items-center justify-center w-10 h-10 rounded-full bg-red-600 transition duration-200 disabled "
+> 
+<FaInfoCircle size={22}  />
+
+</button>
+  </div></div>
+)}
+ 
+ <div className="relative group">
+ {files_saved.length != 0 ? (
+        <div className="flex flex-row items-center justify-center gap-2 font-bold">
+         SAVED DOCS
+           <button
+             onClick={() => {setIsOpen(!isOpen) ; setIsOpen1(false)}}
+             className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-400 hover:bg-gray-600 transition duration-200 "
+           >
+             <FaFileAlt size={22} />
+           </button>
+ 
+    
+ 
+           {isOpen && (
+             <div className=" absolute  top-1 ml-80 border border-gray-300 rounded-md bg-white shadow-md p-3 w-40 z-50 transform transition ease-linear delay-1000  duration-1000 ">
+               <div className="flex justify-between items-center mb-2">
+                 <strong className="text-sm">Saved Files</strong>
+                 <FaTimes
+                   className="cursor-pointer text-gray-500 hover:text-gray-700"
+                   onClick={() => setIsOpen(false)}
+                 />
+               </div>
+               <ul className="list-none p-0 m-0 text-sm max-h-52 overflow-y-auto  ">
+                 {files_saved.map((file, index) => (
+                   <li
+                     key={index}
+                     className="py-1 border-b last:border-b-0 text-gray-700"
+                   >
+                     {file.name}
+                   </li>
+                 ))}
+               </ul>
+             </div>
+           )}
+         </div>
+       ) : null}
+ </div>
+ 
+      </div>
+            <div className="flex flex-col w-[100%] h-[10%] py-[20px] justify-center items-center">
               <div className="w-[300px] h-9 bg-[#2B333E] text-center font-[500] text-[20px] py-[3px]  text-white items-center">
                 Documents Verification
               </div>
@@ -1343,10 +1492,10 @@ const VerifyResults = ({
                     </div>
                   );
                 })}
-                <br />
+         
                 <div className="flex flex-row w-full justify-center h-[280px]   ">
                   <button
-                    className="relative flex flex-row justify-center h-[45px] w-96 items-center bg-white border hover:border-gray-900 hover:border-2 border-gray-500 ml-2"
+                    className="relative flex flex-row justify-center h-[45px] w-96 items-center bg-white border hover:border-gray-900 hover:border-2 border-gray-500 ml-2 -mt-3"
                     onClick={handleProceedClick1}
                   >
                     <p className=" bg-white  text-black  tracking-wide px-2 font-[800] text-xl hover:scale-105  ">
@@ -1363,7 +1512,7 @@ const VerifyResults = ({
       ) : (
         // </div>
         <div className="flex flex-col absolute w-[92%] h-[100%]">
-<div className="flex flex-col space-y-12 absolute w-[40%] h-full -ml-20 -mt-1">
+{/* <div className="flex flex-col space-y-12 absolute w-[40%] h-full -ml-20 -mt-1">
            {state_allinfo && (
       <div className="flex flex-row h-10 w-[96%]  ">
           <button
@@ -1448,7 +1597,7 @@ const VerifyResults = ({
       ) : null}
 
 </div>
-            
+             */}
       
 
           <div className="flex w-[100%] h-[15%] border-b-[1px] border-[#959191] py-[60px]">
@@ -1461,6 +1610,127 @@ const VerifyResults = ({
               ThirdName={"Process Completed"}
             />
           </div>
+
+          <div className="  flex flex-row justify-center items-center space-x-20 h-20 w-full  border-b-[1px]     border-[#959191] "
+               >
+                 {state_allinfo ? (
+            <div className="">
+            <div className="relative group">
+              
+            <div className={`flex flex-row items-center justify-center gap-2 font-bold ${files_saved.length !== 0 ? "" : "ml-8"}`}>
+                INFO
+              <button 
+              onClick={() => {setIsOpen1(!isOpen1) ; setIsOpen(false)}}
+             
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-400 hover:bg-gray-600 transition duration-200"
+            > 
+              <FaInfoCircle size={22}  />
+              
+            </button>
+                </div>
+           
+          
+          
+          </div>
+          
+          {isOpen1 && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+          
+              <div className="bg-white w-[90%] h-[90%] rounded-lg shadow-lg p-5 relative overflow-hidden">
+                
+              
+                <button 
+                  className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+                  onClick={() => setIsOpen1(false)}
+                >
+                  <FaTimes size={24} />
+                </button>
+          
+           
+                <div className="text-xl font-bold mb-4 text-center">LC INFO</div>
+          
+             
+                <div className="overflow-auto h-[96%] border border-gray-300 rounded-lg">
+                  {save_allinfo.ALL_LC_INFO ? (
+                    <table className="w-full table-auto border-collapse border border-gray-300">
+                      <thead className="bg-[#2b333e] text-white">
+                        <tr>
+                          <th className="py-2 px-4 border-r border-b text-left">Key</th>
+                          <th className="py-2 px-4 border-b text-left">Value</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Object.entries(save_allinfo.ALL_LC_INFO).map(([key, value], index) => (
+                          <tr key={index} className="hover:bg-gray-100">
+                            <td className="py-2 px-4 border-r border-b">{key}</td>
+                            <td className="py-2 px-4 border-b">{value}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <p className="text-gray-500 text-center">No information available</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+          
+            </div>
+          )
+        
+        :
+        (
+          <div>   <div className={`flex flex-row items-center justify-center gap-2 font-bold ${files_saved.length !== 0 ? "" : "ml-8"}`}>
+          INFO
+        <button disabled
+        
+        className="flex items-center justify-center w-10 h-10 rounded-full bg-red-600 transition duration-200 disabled "
+        > 
+        <FaInfoCircle size={22}  />
+        
+        </button>
+          </div></div>
+        )}
+          
+          <div className="relative group">
+          {files_saved.length != 0 ? (
+                 <div className="flex flex-row items-center justify-center gap-2 font-bold">
+                  SAVED DOCS
+                    <button
+                      onClick={() => {setIsOpen(!isOpen) ; setIsOpen1(false)}}
+                      className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-400 hover:bg-gray-600 transition duration-200 "
+                    >
+                      <FaFileAlt size={22} />
+                    </button>
+         
+          
+                    {isOpen && (
+                      <div className=" absolute  top-1 ml-80 border border-gray-300 rounded-md bg-white shadow-md p-3 w-40 z-50 transform transition ease-linear delay-1000  duration-1000 ">
+                        <div className="flex justify-between items-center mb-2">
+                          <strong className="text-sm">Saved Files</strong>
+                          <FaTimes
+                            className="cursor-pointer text-gray-500 hover:text-gray-700"
+                            onClick={() => setIsOpen(false)}
+                          />
+                        </div>
+                        <ul className="list-none p-0 m-0 text-sm max-h-52 overflow-y-auto  ">
+                          {files_saved.map((file, index) => (
+                            <li
+                              key={index}
+                              className="py-1 border-b last:border-b-0 text-gray-700"
+                            >
+                              {file.name}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+          </div>
+          
+               </div>
 
           <div className="flex w-[100%] h-[15%] py-[62px] lg:py-[90px] justify-center items-center">
             <div className="w-[300px] h-9 bg-[#2B333E] text-center font-[500] text-[18px] text-white items-center">

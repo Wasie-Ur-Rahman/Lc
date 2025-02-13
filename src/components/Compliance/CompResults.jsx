@@ -234,6 +234,8 @@ const CompResults = ({
 
   const StartAgain = async () => {
     setIsChecking(true);
+    setSave_allinfo({});
+    setState_allinfo(false);
     await isCall();
     await Check();
     setStart_again(true);
@@ -253,8 +255,8 @@ const CompResults = ({
     setFlag_progress(false);
     setPayload_carrier({});
     setDocument_verification([]);
-    setSave_allinfo({})
-    setState_allinfo(false)
+    
+   
     setUpload_Results({});
     setPayload_setter([]);
     setCount(0);
@@ -527,87 +529,7 @@ const CompResults = ({
   return (
     <div className="flex flex-col absolute w-[92%] h-[100%]   ">
 
-      <div className="flex flex-col space-y-24 absolute w-[40%] h-full ">
-      {state_allinfo && (
-  <div className="inline-block absolute Laptops:ml-14 h-full w-full  Laptops_L:ml-12 4k:ml-5">
-    <button
-      onClick={() => setIsOpen1(!isOpen1)}
-      className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-400 hover:bg-gray-600 transition duration-200 -ml-24"
-    >
-      <FaInfoCircle size={20} />
-    </button>
-
-    {isOpen1 && (
-      <div className="absolute -ml-12 top-1 border border-gray-300 rounded-md bg-white h-[96%]  w-full  shadow-md p-3  overflow-auto z-50">
-        <div className="flex justify-between items-center mb-2">
-          <strong className="text-sm">Lc Info</strong>
-          <FaTimes
-            className="cursor-pointer text-gray-500 hover:text-gray-700"
-            onClick={() => setIsOpen1(false)}
-          />
-        </div>
-        {save_allinfo.ALL_LC_INFO ? (
-  <table className="min-w-full table-auto border-collapse border border-gray-300">
-    <thead>
-      <tr className="bg-gray-500">
-        <th className="py-2 px-4 border-r border-b text-left">Key</th>
-        <th className="py-2 px-4 border-b text-left">Value</th>
-      </tr>
-    </thead>
-    <tbody>
-      {Object.entries(save_allinfo.ALL_LC_INFO).map(([key, value], index) => (
-        <tr key={index}>
-          <td className="py-2 px-4 border-r border-b">{key}</td>
-          <td className="py-2 px-4 border-b">{value}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-) : (
-  <p className="text-gray-500">No information available</p>
-)}
-
-      </div>
-    )}
-  </div>
-)}
-
-{files_saved.length != 0 ? (
-        <div className="inline-block relative Laptops:ml-14 Laptops_L:ml-12 4k:ml-5 ">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-400 hover:bg-gray-600 transition duration-200 -ml-24"
-          >
-            <FaFileAlt size={20} />
-          </button>
-
-          {isOpen && (
-            <div className=" absolute -ml-12 top-1 border border-gray-300 rounded-md bg-white shadow-md p-3 w-40 z-50 transform transition ease-linear delay-1000  duration-1000 ">
-              <div className="flex justify-between items-center mb-2">
-                <strong className="text-sm">Saved Files</strong>
-                <FaTimes
-                  className="cursor-pointer text-gray-500 hover:text-gray-700"
-                  onClick={() => setIsOpen(false)}
-                />
-              </div>
-              <ul className="list-none p-0 m-0 text-sm max-h-52 overflow-y-auto  ">
-                {files_saved.map((file, index) => (
-                  <li
-                    key={index}
-                    className="py-1 border-b last:border-b-0 text-gray-700"
-                  >
-                    {file.name}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      ) : null}
-      </div>
-  
-
-    
+     
 
       {isChecking && (
         <div className="fixed inset-0 bg-black opacity-80 flex items-center justify-center z-50">
@@ -649,17 +571,144 @@ const CompResults = ({
 
       {/* 1st Row */}
 
-      <div className="flex w-[100%] h-[15%] border-b-[1px] border-[#959191] py-[60px]">
+      <div className="flex w-[100%] h-[15%]  ">
+   
         <CompStatus
           onComplete={handleComplete}
           showmt700={totalFields > 0 ? showmt701 : null}
           showmt701={NoOfMT701Fields > 0 ? showmt707 : null}
           showmt707={NoOfMT707Amnds > 0 ? showLastMT707Amnd : null}
         />
+    
       </div>
+     
+     <div className="  flex flex-row justify-center items-center space-x-20 h-20 border-b-[1px] border-t-[1px]  border-[#959191]"
+     >
+       {state_allinfo ? (
+  <div className="">
+  <div className="relative group">
+    
+  <div className={`flex flex-row items-center justify-center gap-2 font-bold ${files_saved.length !== 0 ? "" : "ml-8"}`}>
+      INFO
+    <button 
+    onClick={() => {setIsOpen1(!isOpen1) ; setIsOpen(false)}}
+   
+    className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-400 hover:bg-gray-600 transition duration-200"
+  > 
+    <FaInfoCircle size={22}  />
+    
+  </button>
+      </div>
+ 
 
+
+</div>
+
+{isOpen1 && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+
+    <div className="bg-white w-[90%] h-[90%] rounded-lg shadow-lg p-5 relative overflow-hidden">
+      
+    
+      <button 
+        className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+        onClick={() => setIsOpen1(false)}
+      >
+        <FaTimes size={24} />
+      </button>
+
+ 
+      <div className="text-xl font-bold mb-4 text-center">LC INFO</div>
+
+   
+      <div className="overflow-auto h-[96%] border border-gray-300 rounded-lg">
+        {save_allinfo.ALL_LC_INFO ? (
+          <table className="w-full table-auto border-collapse border border-gray-300">
+            <thead className="bg-[#2B333E] text-white">
+              <tr>
+                <th className="py-2 px-4 border-r border-b text-left">Key</th>
+                <th className="py-2 px-4 border-b text-left">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(save_allinfo.ALL_LC_INFO).map(([key, value], index) => (
+                <tr key={index} className="hover:bg-gray-100">
+                  <td className="py-2 px-4 border-r border-b text-black ">{key}</td>
+                  <td className="py-2 px-4 border-b text-black ">{value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="text-gray-500 text-center">No information available</p>
+        )}
+      </div>
+    </div>
+  </div>
+)}
+
+  </div>
+) : 
+(
+  <div>   <div className={`flex flex-row items-center justify-center gap-2 font-bold ${files_saved.length !== 0 ? "" : "ml-8"}`}>
+  INFO
+<button disabled
+
+className="flex items-center justify-center w-10 h-10 rounded-full bg-red-600 transition duration-200 disabled "
+> 
+<FaInfoCircle size={22}  />
+
+</button>
+  </div></div>
+)}
+
+<div className="relative group">
+{files_saved.length != 0 ? (
+       <div className="flex flex-row items-center justify-center gap-2 font-bold">
+        SAVED DOCS
+          <button
+            onClick={() => {setIsOpen(!isOpen) ; setIsOpen1(false)}}
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-400 hover:bg-gray-600 transition duration-200 "
+          >
+            <FaFileAlt size={22} />
+          </button>
+
+        
+
+          {isOpen && (
+            <div className=" absolute  top-1 ml-80 border border-gray-300 rounded-md bg-white shadow-md p-3 w-40 z-50 transform transition ease-linear delay-1000  duration-1000 ">
+              <div className="flex justify-between items-center mb-2">
+                <strong className="text-sm">Saved Files</strong>
+                <FaTimes
+                  className="cursor-pointer text-gray-500 hover:text-gray-700"
+                  onClick={() => setIsOpen(false)}
+                />
+              </div>
+              <ul className="list-none p-0 m-0 text-sm max-h-52 overflow-y-auto  ">
+                {files_saved.map((file, index) => (
+                  <li
+                    key={index}
+                    className="py-1 border-b last:border-b-0 text-gray-700"
+                  >
+                    {file.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      ) : null}
+</div>
+
+     </div>
+    
+   
+
+      
+        
       {/* 2nd Row*/}
       <div className="relative flex w-[100%] h-[85%]  px-16">
+        
         {/* 2nd Row 1st Column */}
         <div className="absolute top-8 w-[60%] h-[94%] overflow-y-auto box-border custom-shadow">
           {/* MT 700 */}
